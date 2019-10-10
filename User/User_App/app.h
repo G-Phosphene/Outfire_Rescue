@@ -1,7 +1,6 @@
 #ifndef _APP_H
 #define _APP_H
 #include  <math.h>
-#include <stdbool.h>
 #include "driver.h"
 #include "GUI.h"
 #include "app_walk.h"
@@ -10,6 +9,7 @@
 #include "app_flash.h"
 #include "app_echo.h"
 #include "app_findFire.h"
+
 #define VERSION  2
 
 typedef enum{
@@ -78,7 +78,6 @@ typedef enum{
 
 /*************灭火机器人结构体****************/
 typedef struct{
-	bool fireBassarl;
 	moveWays_e moveWays;
 	moveWays_e lastMoveWays;
 	uint8_t workStep;
@@ -116,6 +115,8 @@ typedef struct {
 	uint32_t loops;
 }appStruct_t;
 
+
+extern rescueRobotState_t rescueRobotState;
 extern outfireRobotState_t outfireRobotState;
 extern appStruct_t app;
 extern uint32_t parameter[NAME_OF_LIST];

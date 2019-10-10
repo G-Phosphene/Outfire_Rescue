@@ -32,24 +32,24 @@ typedef enum{
 	FRONT_TURN_RIGHT_TIME_90 = 2000,
 	FRONT_TURN_RIGHT_TIME_180 = 2000,
 	
-	FRONT_TURN_LEFT_TIME_135 = 2428,
+	FRONT_TURN_LEFT_TIME_135 = 2000,
 	FRONT_TURN_LEFT_TIME_45 = 2000,
 	
-	FRONT_TURN_RIGHT_TIME_135= 2778,
+	FRONT_TURN_RIGHT_TIME_135= 2000,
 	FRONT_TURN_RIGHT_TIME_45= 2000,
 	
-	BEHIND_TURN_LEFT_TIME_45= 1179,
-	BEHIND_TURN_RIGHT_TIME_45= 1179,
+	BEHIND_TURN_LEFT_TIME_45= 2000,
+	BEHIND_TURN_RIGHT_TIME_45= 2000,
 	
-	REVERSE_TURN_LEFT_TIME_45 = 269,
-	REVERSE_TURN_LEFT_TIME_90 = 420,
-	REVERSE_TURN_LEFT_TIME_135 = 632,
-	REVERSE_TURN_LEFT_TIME_180 = 889,
+	REVERSE_TURN_LEFT_TIME_45 = 2000,
+	REVERSE_TURN_LEFT_TIME_90 = 2000,
+	REVERSE_TURN_LEFT_TIME_135 = 2000,
+	REVERSE_TURN_LEFT_TIME_180 = 2000,
 	
-	REVERSE_TURN_RIGHT_TIME_45 = 269,
-	REVERSE_TURN_RIGHT_TIME_90 = 420,
-	REVERSE_TURN_RIGHT_TIME_135 = 632,
-	REVERSE_TURN_RIGHT_TIME_180 = 889,
+	REVERSE_TURN_RIGHT_TIME_45 = 2000,
+	REVERSE_TURN_RIGHT_TIME_90 = 2000,
+	REVERSE_TURN_RIGHT_TIME_135 = 2000,
+	REVERSE_TURN_RIGHT_TIME_180 = 2000,
 	
 	GO_STRAIGHT_TIME = 2000,
 	
@@ -57,22 +57,22 @@ typedef enum{
 }turnTimeParameter_e;
 
 typedef enum{
-	TURN_LEFT__LEFT_RATE = 6,  
-	TURN_LEFT__RIGHT_RATE = 17,
-	TURN_RIGHT__LEFT_RATE = 17,
-	TURN_RIGHT__RIGHT_RATE = 6,
+	TURN_LEFT__LEFT_RATE = 5,  
+	TURN_LEFT__RIGHT_RATE = 15,
+	TURN_RIGHT__LEFT_RATE = 15,
+	TURN_RIGHT__RIGHT_RATE = 5,
 }valueTurnParameter_e;
 
 typedef enum{
 	
-	REVERSE_LEFT_TURN__RIGHT_RATE = 20,
-	REVERSE_LEFT_TURN__LEFT_RATE = 20,
+	REVERSE_LEFT_TURN__RIGHT_RATE = 50,
+	REVERSE_LEFT_TURN__LEFT_RATE = 50,
 	
-	REVERSE_RIGHT_TURN__RIGHT_RATE = 20,
-	REVERSE_RIGHT_TURN__LEFT_RATE = 20,
+	REVERSE_RIGHT_TURN__RIGHT_RATE = 50,
+	REVERSE_RIGHT_TURN__LEFT_RATE = 50,
 
-	GO_STRAIGHT__LEFT_RATE = 20,
-	GO_STRAIGHT__RIGHT_RATE = 20,
+	GO_STRAIGHT__LEFT_RATE = 50,
+	GO_STRAIGHT__RIGHT_RATE = 50,
 	
 }valueOfStraighParameter_e;
 
@@ -137,17 +137,40 @@ typedef enum{
 	FREE,
 }beginFlag_e;
 
+typedef struct{ //方向控制限位标志
+  u8 forward;
+	u8 left;
+  u8 right;	
+}LimiFlag_t;
+
+typedef enum{
+	stop = 0,
+  go,
+}work_e;
+
+
+extern LimiFlag_t LimiFlag;
 extern moveWays_e finishFlag;
 
 
-
-
+/////////////抓取机构控制/////////
+void app_CLAW_UPorDOWN(uint8_t mode,uint32_t rata);
+void app_CLAW_HOLDorUNON(uint8_t mode,uint32_t rata);
+void app_CAMERA_UPorDOWN(uint8_t mode,uint32_t rate);
+void rescue_AUTOTASK_PUTCLAW(void);
+void rescue_AUTOTASK_HOLDCLAW(void);
+/////////////////////////////////
+/////////////串口控制限位/////////
+void app_UCLIMI_FORNT(float distance1,float distance2); //前限位
+void app_UCLIMI_LEFT(float distance1,float distance2);  //左限位
+void app_UCLIMI_RIGHT(float distance,float distance2); //右限位
+void app_UCLIMI_SPEED(float distance,float distance2);//速度控制
+//////////////////////////////////
 void app_LeftWheel(uint8_t mode,uint32_t rate);
 void app_RightWheel(uint8_t mode,uint32_t rate);
 void app_turnAngleDirection(uint8_t leftWheelDirection,uint32_t leftWheelRate,
                             uint8_t rightWheelDirection,uint32_t rightWheelRate,
 														uint32_t WaitingTime);
-void app_goOtherAction(uint16_t goTime,turnDirection_e direction,handDirection_e hand);
 void app_setZero(void);
 void app_walkStop(void);
 void app_goStraight(void);

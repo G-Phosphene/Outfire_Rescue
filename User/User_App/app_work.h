@@ -40,11 +40,11 @@ typedef enum{
 	WORK_STACK_SIZE = 512,
 }appWork_e;
 
+extern uint8_t speed_cut;
 
 void app_fan(void);
 void app_judgeFunc(void);
 void app_returnFunc(void);
-calibrationFinish_e checkFire(void);
 
 void app_outfireOneWorkReady(void);
 void app_outfireOneWorkDoing(void);
@@ -62,4 +62,5 @@ void app_WorkCommandReset(void);
 
 
 void app_WorkTaskInit(void);
+
 #endif

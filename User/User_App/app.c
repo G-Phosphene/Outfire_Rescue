@@ -2,7 +2,7 @@
 #include "GUI.h"
 
 outfireRobotState_t outfireRobotState;
-
+rescueRobotState_t rescueRobotState;
 uint32_t parameter[NAME_OF_LIST];
 appStruct_t app;
 uint8_t version;

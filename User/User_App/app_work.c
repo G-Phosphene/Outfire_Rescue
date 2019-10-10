@@ -1,7 +1,7 @@
 #include "app.h"
-
 #define WORK_TASK_PERIOD  1
 
+uint8_t speed_cut = stop;
 
 appStruct_t appWork;
 
@@ -14,31 +14,9 @@ void app_fanMode(fanMode_e fanDirection)
 void app_fan()
 {
 	PDout(15) = 1;
-	PDout(14) = 1;
 	vTaskDelay(800);
 	PDout(15) = 0;
-	PDout(14) = 0;
-	vTaskDelay(500);
-	outfireRobotState.fireBassarl = true;
 }
-
-
-calibrationFinish_e checkFire(void){
-	calibrationFinish_e finshFlag;
-	finshFlag = CALIBRATION_NULL;
-	if(outfireRobotState.fireBassarl == true){
-		if(adcTestData.adcData[L_ADC] < 300|| adcTestData.adcData[R_ADC] < 300){
-			app_fan();
-			finshFlag = CALIBRATION_WAITING;
-		}
-		else if(adcTestData.adcData[L_ADC] > 300 && adcTestData.adcData[R_ADC] > 300){
-			outfireRobotState.fireBassarl = false;
-			finshFlag = CALIBRATION_FINISHED;
-		}
-	}
-		return finshFlag;
-}
-
 
 void app_WorkCommandReset(void)    //恢复初始状态标志位
 {
@@ -49,6 +27,15 @@ void app_WorkCommandReset(void)    //恢复初始状态标志位
 	outfireRobotState.beginFlag = FREE;
 	outfireRobotState.workMode = TEST;
 	driver_FanMotorOff();	
+}
+
+void app_rescueWorkCommandReset(void){
+	command = RESCUE_STOP;
+	LimiFlag.forward = go;
+	LimiFlag.left    = go;
+	LimiFlag.right   = go;
+	speed_cut        = stop;
+	rescueRobotState.step = READY;
 }
 
 /***灭火1机器人主任务**/
@@ -67,7 +54,14 @@ void app_outfireTwoRobotTask(void){
 }
 	/***救援机器人主任务**/
 void app_rescueRobotTask(void){
-
+	switch(rescueRobotState.step){
+			case INIT: app_rescueWorkCommandReset(); break;
+			case READY: app_rescueWorkReady(); break;
+			case DOING: app_rescueWorkDoing(); break;
+			case FINISH: break;
+			default:break;
+		}
+	
 }
 
 void app_WorkUpdata(robotType_e robotType) 	//机器人任务分类
@@ -91,7 +85,7 @@ void app_WorkTask(void *Parameters)
 	while(1)
 	{
 		vTaskDelayUntil(&xLastWakeTime, WORK_TASK_PERIOD);
-		app_WorkUpdata(OUT_FIRE1);
+		app_WorkUpdata(RESCUE);	
 		vTaskDelay(1);
 	}
 }
@@ -99,5 +93,7 @@ void app_WorkTask(void *Parameters)
 void app_WorkTaskInit(void)
 {
   xTaskCreate(app_WorkTask,"WORK",WORK_STACK_SIZE,NULL,WORK_PRIORITY,&appWork.xHandleTask);
+	rescueRobotState.step = INIT;
+	command = '0';
 }
 

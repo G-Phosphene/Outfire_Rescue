@@ -51,9 +51,9 @@ void TIM23_PWM_Init(void)
 	//上电让电机静止
 	u16 CCR1_Val = 0;        
 	u16 CCR2_Val = 0;
-	u16 CCR3_Val = 0;        
-	u16 CCR4_Val = 0;
-	u16 CCR5_Val = 0;
+	u16 CCR3_Val = 260;    //爪子1     
+	u16 CCR4_Val = 250;    //爪子2
+	u16 CCR5_Val = 130;  //摄像头
 
 
 	TIM_TimeBaseStructure.TIM_Period = (3200 - 1); 
@@ -87,6 +87,7 @@ void TIM23_PWM_Init(void)
 	/*使能通道3*/
 	TIM_OC3Init(TIM3, &TIM_OCInitStructure);	
 	TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
+
 
 	/*设置通道4的电平跳变值，输出另外一个占空比的PWM*/
 	TIM_OCInitStructure.TIM_Pulse = CCR4_Val;	  

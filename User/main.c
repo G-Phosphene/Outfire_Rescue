@@ -48,6 +48,7 @@ void app_Init(void)
 	app_ParameterInit();
 	GUI_Init();								//1
 	
+	//app_USART_control();  目前无具体任务
 	appfindFire_Init();
 	app_walkTaskInit();	
 	

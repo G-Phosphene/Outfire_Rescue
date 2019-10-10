@@ -4,93 +4,66 @@
 #define WALK_TASK_PERIOD  1
 #define CALIBRATION_DISTANCE  0.3f
 #define GO_STRAIGHT_MIDDLE 20
-#define GO_STRAIGHT_RATIO  4.0f 						//轮子差速大小
-#define CALIBRATION_TIME_RATIO 30.0f
+#define GO_STRAIGHT_RATIO  4.0f
 #define GO_STRAIGHT_ADD    20
-#define WHELL_RATE_ADD 		10
-#define MAX_DIFFERENCE_VALUE 8 							//最大差值
-#define MIN_DISTANCE_VALUE 6						//距墙最小距离之和
-
 appStruct_t appWalk;
 moveWays_e finishFlag;
-void app_LeftWheel(uint8_t mode,uint32_t rate){    //向前后左转
-	if(mode == 1){		
-		TIM_SetCompare1(TIM3,parameter[NAME_SET_ZERO__LEFT_RATE]+rate);
-	}else if(mode == 2){
-		TIM_SetCompare1(TIM3,parameter[NAME_SET_ZERO__LEFT_RATE]-rate);
-	}
+void app_LeftWheel(uint8_t mode,uint32_t rate)    //向前后左转
+{
+if(mode == 1)
+{		
+	TIM_SetCompare1(TIM3,parameter[NAME_SET_ZERO__LEFT_RATE]+rate);
+}
+else if(mode == 2)
+{
+	TIM_SetCompare1(TIM3,parameter[NAME_SET_ZERO__LEFT_RATE]-rate);
+}
 }
 
-void app_RightWheel(uint8_t mode,uint32_t rate){ // 右前 右后
-	if(mode == 1){		
+void app_RightWheel(uint8_t mode,uint32_t rate) // 右前 右后
+{
+	if(mode == 1)
+	{		
 		TIM_SetCompare2(TIM3,parameter[NAME_SET_ZERO__RIGHT_RATE]-rate);
-	}else if(mode == 2){
+	}
+	else if(mode == 2)
+	{
 		TIM_SetCompare2(TIM3,parameter[NAME_SET_ZERO__RIGHT_RATE]+rate);
 	}
 }
 
-
-void app_goOtherAction(uint16_t goTime,turnDirection_e direction,handDirection_e hand){
-	switch(hand){
-		case FRONT:{
-			switch(direction){
-				case NO_TURN:{
-					app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
-					app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-					vTaskDelay(goTime);
-					app_LeftWheel(FRONT,parameter[NAME_SET_ZERO__LEFT_RATE]);
-					app_RightWheel(FRONT,parameter[NAME_SET_ZERO__RIGHT_RATE]);
-					break;
-				}
-				case LEFT:{
-					app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE] - WHELL_RATE_ADD);
-					app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-					vTaskDelay(goTime);
-					app_LeftWheel(FRONT,parameter[NAME_SET_ZERO__LEFT_RATE]);
-					app_RightWheel(FRONT,parameter[NAME_SET_ZERO__RIGHT_RATE]);
-					break;
-				}
-				case RIGHT:{
-					app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
-					app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE] - WHELL_RATE_ADD);
-					vTaskDelay(goTime);
-					app_LeftWheel(FRONT,parameter[NAME_SET_ZERO__LEFT_RATE]);
-					app_RightWheel(FRONT,parameter[NAME_SET_ZERO__RIGHT_RATE]);
-					break;
-				
-				}
-			}
-			break;
-		}
-		case BEHIND:{
-			switch(direction){
-				case NO_TURN:{
-					app_LeftWheel(BEHIND,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
-					app_RightWheel(BEHIND,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-					vTaskDelay(goTime);
-					app_LeftWheel(BEHIND,parameter[NAME_SET_ZERO__LEFT_RATE]);
-					app_RightWheel(BEHIND,parameter[NAME_SET_ZERO__RIGHT_RATE]);
-					break;
-				}
-				case LEFT:{
-					app_LeftWheel(BEHIND,parameter[NAME_GO_STRAIGHT__LEFT_RATE] - WHELL_RATE_ADD);
-					app_RightWheel(BEHIND,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-					vTaskDelay(goTime);
-					app_LeftWheel(BEHIND,parameter[NAME_SET_ZERO__LEFT_RATE]);
-					app_RightWheel(BEHIND,parameter[NAME_SET_ZERO__RIGHT_RATE]);
-					break;
-				}
-				case RIGHT:{
-					app_LeftWheel(BEHIND,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
-					app_RightWheel(BEHIND,parameter[NAME_GO_STRAIGHT__RIGHT_RATE] - WHELL_RATE_ADD);
-					vTaskDelay(goTime);
-					app_LeftWheel(BEHIND,parameter[NAME_SET_ZERO__LEFT_RATE]);
-					app_RightWheel(BEHIND,parameter[NAME_SET_ZERO__RIGHT_RATE]);
-					break;
-				}
-			}
-			break;	
-		}
+//////////////Don't touch.hot working in progress/////////////
+void app_CLAW_UPorDOWN(uint8_t mode,uint32_t rata){//爪子1上2下
+	if(mode==claw_UP){
+	TIM_SetCompare3(TIM3,rata);
+	}
+	else if (mode==claw_DOWN){
+	TIM_SetCompare3(TIM3,rata);
+	}
+		else if(mode==0){
+	TIM_SetCompare3(TIM3,0);
+	}
+}
+void app_CLAW_HOLDorUNON(uint8_t mode,uint32_t rata){	//爪子3紧4松
+		if(mode==claw_HOLD){
+	TIM_SetCompare4(TIM3,rata);   
+	}
+	else if (mode==claw_UNON){
+	TIM_SetCompare4(TIM3,rata);
+	}
+	else if(mode==0){
+	TIM_SetCompare4(TIM3,0);
+	}
+}
+void app_CAMERA_UPorDOWN(uint8_t mode,uint32_t rata){//相机1上2下
+		if(mode==1){
+	TIM_SetCompare1(TIM2,rata);
+	}
+	else if (mode==2){
+	TIM_SetCompare1(TIM2,rata);
+	}
+		else if(mode==0){
+	TIM_SetCompare1(TIM2,0);
 	}
 }
 
@@ -118,10 +91,10 @@ void app_walkStop(void){
 	}
 }
 void app_setZero(void){
-	if(outfireRobotState.lastMoveWays != SET_ZERO){
-		TIM_SetCompare1(TIM3,parameter[NAME_SET_ZERO__LEFT_RATE]);
-		TIM_SetCompare2(TIM3,parameter[NAME_SET_ZERO__RIGHT_RATE]);
-	}
+//	if(outfireRobotState.lastMoveWays != SET_ZERO){
+//		TIM_SetCompare1(TIM3,parameter[NAME_SET_ZERO__LEFT_RATE]);
+//		TIM_SetCompare2(TIM3,parameter[NAME_SET_ZERO__RIGHT_RATE]);
+//	}
 }
 
 // && outfireRobotState.beginFlag == FREE
@@ -133,56 +106,27 @@ void app_goStraight(void){
 	app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
 	}
 }
-
-
-void calibrationTostraight(){
-	uint32_t timeSumLeft;
-	uint32_t timeSumRight;
-	float differenceValueLeft;
-	float differenceValueRight;
-	float differenceValueLeftCali;
-	float differenceValueRightCali;
-	
-	differenceValueLeft = fabs(SRF_04_Data3.getDistance + SRF_04_Data4.getDistance);
-	differenceValueRight = fabs(SRF_04_Data3.getDistance + SRF_04_Data4.getDistance);
-	differenceValueLeftCali = (26 - differenceValueLeft);
-	differenceValueRightCali = (26 - differenceValueRight);
-	timeSumLeft = CALIBRATION_TIME_RATIO*differenceValueLeftCali;
-	timeSumRight = CALIBRATION_TIME_RATIO*differenceValueRightCali;
-	if(differenceValueLeft < MIN_DISTANCE_VALUE){
-		app_goOtherAction(timeSumLeft,RIGHT,FRONT);
-		app_goOtherAction(timeSumLeft,LEFT,FRONT);
-	}
-	if(differenceValueRight < MIN_DISTANCE_VALUE){
-		app_goOtherAction(timeSumRight,LEFT,FRONT);
-		app_goOtherAction(timeSumRight,RIGHT,FRONT);
-	}
-}
-
+uint32_t differenceSum;
+float differenceValue;
 void calibrationGostraight(turnDirection_e direction){
-	float differenceSum;
-	float differenceValue;
-	calibrationTostraight();
+
 	switch(direction){
 		case LEFT:{
 			differenceValue = fabs(SRF_04_Data3.getDistance - SRF_04_Data4.getDistance);
-			if(differenceValue < MAX_DIFFERENCE_VALUE){
-				differenceSum = GO_STRAIGHT_RATIO*differenceValue;
-				if(SRF_04_Data3.getDistance > SRF_04_Data4.getDistance){
-					app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]-differenceSum);
-					app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-				}
-				if(SRF_04_Data3.getDistance < SRF_04_Data4.getDistance){
-					app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
-					app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]-differenceSum);    //需要加补偿值
-				}
+			differenceSum = GO_STRAIGHT_RATIO*differenceValue;
+			if(SRF_04_Data3.getDistance > SRF_04_Data4.getDistance){
+				app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]-differenceSum);
+				app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
+			}
+			if(SRF_04_Data3.getDistance < SRF_04_Data4.getDistance){
+				app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
+				app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]-differenceSum);    //需要加补偿值
 			}
 		break;
 		}
 		case RIGHT:{
 			differenceValue = fabs(SRF_04_Data5.getDistance - SRF_04_Data6.getDistance);
-			if(differenceValue < MAX_DIFFERENCE_VALUE){
-				differenceSum = GO_STRAIGHT_RATIO*differenceValue;
+			differenceSum = GO_STRAIGHT_RATIO*differenceValue;
 				if(SRF_04_Data5.getDistance > SRF_04_Data6.getDistance){
 					app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
 					app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]-differenceSum);
@@ -191,7 +135,6 @@ void calibrationGostraight(turnDirection_e direction){
 					app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]-differenceSum);
 					app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);	
 				}
-			}
 		break;
 		}
 		case NO_TURN:{
@@ -265,11 +208,11 @@ calibrationFinish_e app_calibration(turnDirection_e direction){      //对位函数
 		if(calibrationData >CALIBRATION_DISTANCE) 
 			{
 				app_LeftWheel(FRONT,4);
-				app_RightWheel(FRONT,7);
+				app_RightWheel(FRONT,6);
 				finshFlag = CALIBRATION_WAITING;
 			}else if(calibrationData < -CALIBRATION_DISTANCE){
 				app_LeftWheel(FRONT,4);
-				app_RightWheel(FRONT,7);
+				app_RightWheel(FRONT,6);
 				finshFlag = CALIBRATION_WAITING;
 			}
 			else{

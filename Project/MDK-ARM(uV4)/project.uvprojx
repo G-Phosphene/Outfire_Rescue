@@ -522,6 +522,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\User_Driver\driver_linearMovement.c</FilePath>
             </File>
+            <File>
+              <FileName>HJ_USART_IRQ.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\User_Driver\HJ_USART_IRQ.c</FilePath>
+            </File>
+            <File>
+              <FileName>HJ_USART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\User_Driver\HJ_USART.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -541,11 +551,6 @@
               <FileName>bsp_led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\bsp\src\bsp_led.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\bsp\src\bsp_uart_fifo.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_it.c</FileName>

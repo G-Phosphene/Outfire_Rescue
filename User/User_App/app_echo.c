@@ -1,7 +1,7 @@
 #include "app.h"
 
-#define ECHO_TASK_PERIOD  30
-#define ECHO_UPDATA_TIME  1000
+#define ECHO_TASK_PERIOD  40
+#define ECHO_UPDATA_TIME  800
 appStruct_t appTimer;
 ultrasonicTaskStruct_t ultrasonicTask;
 echoStruct_t echoDirection;
@@ -62,8 +62,8 @@ void app_echoTask(void *Parameters){
 	while(1)
 	{
 		vTaskDelayUntil(&xLastWakeTime,ECHO_TASK_PERIOD);
-		app_echoUpdata();
-		vTaskDelay(1);
+		 app_echoUpdata();
+		 vTaskDelay(1);
 		
 	}
 }
