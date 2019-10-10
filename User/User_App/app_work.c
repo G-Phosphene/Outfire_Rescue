@@ -103,7 +103,9 @@ void app_WorkTask(void *Parameters)
 }
 
 void app_WorkTaskInit(void){
+
 	xTaskCreate(app_WorkTask,"WORK",WORK_STACK_SIZE,NULL,WORK_PRIORITY,&appWork.xHandleTask);
-	robotSelect.robotSelect = OUT_FIRE2;
+
+	robotSelect.robotSelect = OUT_FIRE1;
 }
 

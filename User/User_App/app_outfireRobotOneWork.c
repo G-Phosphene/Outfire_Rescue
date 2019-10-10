@@ -4,24 +4,24 @@
 
 //  超声波与墙的距离 可以做  Flash
 void app_outfireOneWorkReady(void)
-{
-		int i;
+{ 
 	/*待补充*/ //用按键控制小车启动//
 	//finishFlag = SET_ZERO;
+	/***********初始化火点位置*********/
 	if(outfireRobotState.workMode == OUT_FIRE){
-		outfireRobotState.robotTaskstep = FIRST_FIRE;
-		outfireRobotState.step = DOING;
-		outfireRobotState.workStep = NULL;
-		for(i = 0;i < 9;i++){outfireRobotState.returnFlag[i] = 0;} //初始化火点寻找和返回函数
-		for(i = 0;i < 9;i++){outfireRobotState.fireArray[i] = 0;}
-		/***********初始化火点位置*********/
-		outfireRobotState.fireArray[FIRST_FIRE] = 1 ;
-		outfireRobotState.fireArray[NINTH_FIRE] = 1;
-		outfireRobotState.fireArray[THIRD_FIRE] = 1;
-		outfireRobotState.fireArray[SECOND_FIRE] =1;
-		app_judgeFunc();
-		if(outfireRobotState.returnFlag[RETURN] == 1){   //全无火   直接到最后一步
+			app_judgeFunc();	
+		if(outfireRobotState.returnFlag[RETURN] == 0){
+			outfireRobotState.robotTaskstep = FIRST_FIRE;
+			outfireRobotState.step = DOING;
+			outfireRobotState.workStep = NULL;
+			outfireRobotState.moveWays = STOP;
+			outfireRobotState.beginFlag = FREE;
+		}else if(outfireRobotState.returnFlag[RETURN] ==	1){
 			outfireRobotState.robotTaskstep = RETURN;
+			outfireRobotState.step = DOING;
+			outfireRobotState.workStep = NULL;
+			outfireRobotState.moveWays = STOP;
+				outfireRobotState.beginFlag = FREE;
 		}
 	}
 }
@@ -41,7 +41,7 @@ void app_findFirstFire(void){
 				if(SRF_04_Data1.getDistance < 50 && SRF_04_Data2.getDistance <50)
 				{
 					
-					outfireRobotState.workStep = 2;
+ 					outfireRobotState.workStep = 2;
 				}
 			break;
 			}
@@ -886,36 +886,36 @@ void app_returnFunc(void){
 			case 0:{
 				outfireRobotState.moveWays = REVERSE_RIGHT_TURN_180;
 				vTaskDelay(200);
-				outfireRobotState.workStep = 1;
+				outfireRobotState.workStep = 2;
 				break;
 			}
-			case 1:{
-				calibrationFinish = app_calibration(LEFT);
-				outfireRobotState.moveWays = OTHER;
-				if(calibrationFinish == CALIBRATION_FINISHED){
-					outfireRobotState.workStep = 2;
-				}
-				break;
-			}
+//			case 1:{
+//				calibrationFinish = app_calibration(LEFT);
+//				outfireRobotState.moveWays = OTHER;
+//				if(calibrationFinish == CALIBRATION_FINISHED){
+//					outfireRobotState.workStep = 2;
+//				}
+//				break;
+//			}
 			case 2:{
 				calibrationGostraight(LEFT);
 				outfireRobotState.moveWays = OTHER;
-				if(SRF_04_Data1.getDistance < 45 && SRF_04_Data2.getDistance < 45)
+				if(SRF_04_Data1.getDistance < 32 && SRF_04_Data2.getDistance < 32)
 				{
-					outfireRobotState.moveWays = STOP;
-					outfireRobotState.workStep = 3;
-				}
-				break;
-			}
-			case 3:{
-				outfireRobotState.moveWays = GO_STRAIGHT;
-				if(SRF_04_Data1.getDistance < 32 && SRF_04_Data2.getDistance < 32){
-					outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
-					vTaskDelay(200);
+					outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;;
 					outfireRobotState.workStep = 'g';
 				}
 				break;
 			}
+//			case 3:{
+//				outfireRobotState.moveWays = GO_STRAIGHT;
+//				if(SRF_04_Data1.getDistance < 22 && SRF_04_Data2.getDistance < 32){
+//					outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
+//					vTaskDelay(200);
+//					outfireRobotState.workStep = 'g';
+//				}
+//				break;
+//			}
 			case 'g':{
 				calibrationFinish = app_calibration(LEFT);
 				outfireRobotState.moveWays = OTHER;
@@ -985,6 +985,9 @@ void app_judgeFunc(void){
 			break;
 			}
 	}
+	if(outfireRobotState.returnFlag[RETURN] == 1){   //全无火   直接到最后一步
+			outfireRobotState.robotTaskstep = RETURN;
+		}
 }
 
 /***寻火任务**/
@@ -996,7 +999,7 @@ void app_outfireOneWorkDoing(void){
 			case NINTH_FIRE:app_findNinthFire(); break;
 			case THIRD_FIRE:app_findThirdFire(); break;
 			case SECOND_FIRE:app_findSecondFire(); break;
-			case RETURN:app_returnFunc();;break;
+			case RETURN:app_returnFunc();break;
 		}
 	}
 }

@@ -50,6 +50,7 @@ typedef enum{
 	FIRE7,
 	FIRE8,
 	FIRE9,
+	CLEAR_ALL,
 }fireChoose_e;
 
 typedef enum{

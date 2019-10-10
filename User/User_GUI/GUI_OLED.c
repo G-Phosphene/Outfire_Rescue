@@ -107,7 +107,7 @@ void menuInit()
 	{
 		fireChooseMenu.showFrom = 0;
 		fireChooseMenu.showTo = 3;
-		fireChooseMenu.subMenuNumber = 9;
+		fireChooseMenu.subMenuNumber = 10;
 		fireChooseMenu.currentOption = 0;
 		fireChooseMenu.menuOption[0] = "fire-1";
 		fireChooseMenu.menuOption[1] = "fire-2";
@@ -118,13 +118,14 @@ void menuInit()
 		fireChooseMenu.menuOption[6] = "fire-7";
 		fireChooseMenu.menuOption[7] = "fire-8";
 		fireChooseMenu.menuOption[8] = "fire-9";
+		fireChooseMenu.menuOption[9] = "clear_all";
 		fireChooseMenu.subMenu = malloc(sizeof(menuStruct_t *) * fireChooseMenu.subMenuNumber);
-		for(i = 0;i<9;i++){
+		for(i = 0;i<10;i++){
 			fireChooseMenu.subMenu[i] = NULL;
 		}
 		fireChooseMenu.preMenu = &mainMenu;
 		fireChooseMenu.func = (void (**)(void))malloc(sizeof(NULL) * fireChooseMenu.subMenuNumber);
-		for(i = 0;i<9;i++){
+		for(i = 0;i<10;i++){
 			fireChooseMenu.func[i] = &fireChoose;
 		}
 	
@@ -870,6 +871,7 @@ void testSetZero(void)
 
 void workChoose(void)
 {
+
 	switch(currentMenu -> currentOption){
 		case TEST:{ 
 			currentMenu -> displayFlag = FUNCTION_MANUAL_FLAG;
@@ -907,6 +909,7 @@ void workChoose(void)
 //	OLED_ShowString(40,0,"WaitingChoose",16);
 }
 void fireChoose(void){
+		int i;
 	switch(currentMenu -> currentOption){
 		case FIRE1:{
 			switch(oled.keyValue){
@@ -1076,6 +1079,21 @@ void fireChoose(void){
 						outfireRobotState.fireArray[NINTH_FIRE] = 1;
 						OLED_ShowString(0,0,"CHOOSE_YES",16);
 					}
+					break;
+				}
+			}break;}
+				case CLEAR_ALL:{
+				switch(oled.keyValue){
+				case OLED_BACK:{
+					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//刷新一次菜单~
+					break;
+				}
+				case OLED_ENTER:{
+					OLED_Clear();
+					for(i = 0;i < 9;i++){outfireRobotState.returnFlag[i] = 0;} //初始化火点寻找和返回函数
+					for(i = 0;i < 9;i++){outfireRobotState.fireArray[i] = 0;}
+					OLED_ShowString(0,0,"CLEAR_ALL",16);
+					OLED_ShowString(0,2,"SUCCESSFULY",16);
 					break;
 				}
 			}break;}
