@@ -73,6 +73,20 @@ void app_outfireTwoRobotTask(void){
 	}
 }
 
+void app_rescueWorkCommandReset(void){
+	command = RESCUE_STOP;
+	rescueRobotState.testTarget = WAITING;
+	rescueRobotState.lastMoveWays = OTHER;
+	rescueRobotState.moveWays = STOP;
+	rescueRobotState.beginFlag = FREE;
+	rescueRobotState.workMode = TEST;
+	rescueRobotState.step = READY;	
+	LimiFlag.forward = go;
+	LimiFlag.left    = go;
+	LimiFlag.right   = go;
+	speed_cut        = stop;
+
+}
 void app_judgeFunc(void){
 	uint8_t roadCase = 1;
 	if(robotSelect.robotSelect == OUT_FIRE1){
@@ -162,9 +176,14 @@ void app_judgeFunc(void){
 
 	/***救援机器人主任务**/
 void app_rescueRobotTask(void){
-
+	switch(rescueRobotState.step){
+			case INIT: app_rescueWorkCommandReset(); break;
+			case READY: app_rescueWorkReady(); break;
+			case DOING: app_rescueWorkDoing(); break;
+			case FINISH: break;
+			default:break;
+		}
 }
-
 void app_WorkUpdata(robotSelectStruct_t *robotSelect) 	//机器人任务分类
 {
 	

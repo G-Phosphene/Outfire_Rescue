@@ -51,9 +51,9 @@ void TIM23_PWM_Init(void)
 	//上电让电机静止
 	u16 CCR1_Val = 0;        
 	u16 CCR2_Val = 0;
-	u16 CCR3_Val = 0;        
-	u16 CCR4_Val = 0;
-	u16 CCR5_Val = 0;
+	u16 CCR3_Val = 260;  //爪子1      
+	u16 CCR4_Val = 250;  //爪子2
+	u16 CCR5_Val = 120;  //相机
 
 
 	TIM_TimeBaseStructure.TIM_Period = (3200 - 1); 

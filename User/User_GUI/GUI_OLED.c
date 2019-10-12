@@ -1035,12 +1035,12 @@ void fireChoose(void){
 						}
 						case OLED_ENTER:{
 							OLED_Clear();
-							if(outfireRobotState.fireArray[NINTH_FIRE]){
-								outfireRobotState.fireArray[NINTH_FIRE] = 0;
+							if(outfireRobotState.fireArray[FOURTH_FIRE]){
+								outfireRobotState.fireArray[FOURTH_FIRE] = 0;
 								OLED_ShowString(0,0,"CHOOSE_NO",16);
 							}
-							else if(!outfireRobotState.fireArray[NINTH_FIRE]){
-								outfireRobotState.fireArray[NINTH_FIRE] = 1;
+							else if(!outfireRobotState.fireArray[FOURTH_FIRE]){
+								outfireRobotState.fireArray[FOURTH_FIRE] = 1;
 								OLED_ShowString(0,0,"CHOOSE_YES",16);
 							}break;
 						}

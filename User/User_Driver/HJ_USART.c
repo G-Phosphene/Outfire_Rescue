@@ -40,51 +40,66 @@ GPIO_InitTypeDef GPIO_InitStructure;
 }
 
 void wifiControl(uint8_t command){
-	if(initFlg == 1){
 		switch(command){ 
-			case RESCUE_STOP:{    //所有舵机停止
-				app_LeftWheel(FRONT,0);
-				app_RightWheel(FRONT,0);
-				break;
-			}
-			case RESCUE_FORWARD :  //前1			                     
-			app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
-			app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-				break;
-			case RESCUE_BACK :    //后2
-				app_LeftWheel(BEHIND,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
-			app_RightWheel(BEHIND,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-				break;
-			case RESCUE_LEFT :    //左3
-			   app_LeftWheel(BEHIND,parameter[NAME_REVERSE_LEFT_TURN__LEFT_RATE]);	
-				 app_RightWheel(FRONT,parameter[NAME_REVERSE_LEFT_TURN__RIGHT_RATE]);
-				break;
-			case RESCUE_RIGHT :   //右4    
-					app_LeftWheel(FRONT,parameter[NAME_REVERSE_LEFT_TURN__LEFT_RATE]);				
-			   app_RightWheel(BEHIND,parameter[NAME_REVERSE_LEFT_TURN__RIGHT_RATE]);
-				break;
-			case CLAW_UP :        //爪子张开自动任务5
-			rescue_AUTOTASK_PUTCLAW();
-			//
-				break;
-			case CLAW_DOWN :     //爪子抓取自动任务6
-			rescue_AUTOTASK_HOLDCLAW();
-				//
-				break;
-			case CLAW_HOLD :     //寻物时相机位置7
-				app_CAMERA_UPorDOWN(camera_DOWN,170);
-		 //
-				break;
-			case 0x38 :
-				app_CAMERA_UPorDOWN(camera_DOWN,118);
-			 break;
-			default:
+		case RESCUE_STOP:{    //所有舵机停止
+			app_LeftWheel(FRONT,0);
+			app_RightWheel(FRONT,0);
 			break;
 		}
-	}
-	else{
-		command = RESCUE_STOP;
-		app_LeftWheel(FRONT,0);
-		app_RightWheel(FRONT,0);
+		case RESCUE_FORWARD :  //前1	
+                   if(LimiFlag.forward){	 
+										 if(speed_cut){			
+	                    app_LeftWheel(FRONT,0.3*parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
+	                    app_RightWheel(FRONT,0.3*parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
+		                 }
+                      else{										 
+	                    app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
+	                    app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
+											}
+		                 }
+									 if(LimiFlag.forward==stop){
+	                    app_LeftWheel(FRONT,0);
+		                  app_RightWheel(FRONT,0);
+		                  } 	                								  
+			break;
+		case RESCUE_BACK :    //后2
+											app_LeftWheel(BEHIND,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
+											app_RightWheel(BEHIND,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
+			break;
+		case RESCUE_LEFT :    //左3
+			              if(LimiFlag.left){ 
+										 app_LeftWheel(BEHIND,parameter[NAME_REVERSE_LEFT_TURN__LEFT_RATE]);	
+										 app_RightWheel(FRONT,parameter[NAME_REVERSE_LEFT_TURN__RIGHT_RATE]);
+			                }
+				            if( LimiFlag.left==stop){
+		                  app_LeftWheel(FRONT,0);
+		                  app_RightWheel(FRONT,0);
+			                } 
+	
+			break;
+		case RESCUE_RIGHT :   //右4 
+										 if(LimiFlag.right){			
+											 app_LeftWheel(FRONT,parameter[NAME_REVERSE_LEFT_TURN__LEFT_RATE]);				
+											 app_RightWheel(BEHIND,parameter[NAME_REVERSE_LEFT_TURN__RIGHT_RATE]);
+										 }
+			              if(LimiFlag.right==stop){
+		                  app_LeftWheel(FRONT,0);
+		                  app_RightWheel(FRONT,0);
+		                  } 
+			break;
+		case CLAW_UP :        //爪子张开自动任务5
+		rescue_AUTOTASK_PUTCLAW();
+			break;
+		case CLAW_DOWN :     //爪子抓取自动任务6
+		rescue_AUTOTASK_HOLDCLAW();
+			break;
+		case CLAW_HOLD :     //寻物时相机位置7
+			app_CAMERA_UPorDOWN(camera_DOWN,150);
+			break;
+		case 0x38 : /////用来控制自动回城
+			app_CAMERA_UPorDOWN(camera_DOWN,90);
+		 break;
+		default:
+		break;
 	}
 }

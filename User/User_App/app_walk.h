@@ -156,6 +156,13 @@ void app_CLAW_HOLDorUNON(uint8_t mode,uint32_t rata);
 void app_CAMERA_UPorDOWN(uint8_t mode,uint32_t rate);
 void rescue_AUTOTASK_PUTCLAW(void);
 void rescue_AUTOTASK_HOLDCLAW(void);
+///////////////////////////////
+////////////自动回城///////////
+//////////////////////////////
+void app_back_One(void);
+void app_back_Two(void);
+void app_back_Three(void);
+void app_back_Four(void);
 /////////////////////////////////
 /////////////串口控制限位/////////
 void app_UCLIMI_FORNT(float distance1,float distance2); //前限位

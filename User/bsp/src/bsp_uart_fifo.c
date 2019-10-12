@@ -59,7 +59,7 @@ static void UartVarInit(void);
 static void InitHardUart(void);
 static void UartSend(UART_T *_pUart, uint8_t *_ucaBuf, uint16_t _usLen);
 static uint8_t UartGetChar(UART_T *_pUart, uint8_t *_pByte);
-static void UartIRQ(UART_T *_pUart);
+//static void UartIRQ(UART_T *_pUart);
 static void ConfigUartNVIC(void);
 
 void RS485_InitTXE(void);
@@ -534,8 +534,8 @@ static void UartVarInit(void)
 */
 static void InitHardUart(void)
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
-	USART_InitTypeDef USART_InitStructure;
+//	GPIO_InitTypeDef GPIO_InitStructure;
+//	USART_InitTypeDef USART_InitStructure;
 
 #if UART1_FIFO_EN == 1		/* 串口1 TX = PA9   RX = PA10 或 TX = PB6   RX = PB7*/
 
@@ -774,7 +774,7 @@ static void InitHardUart(void)
 */
 static void ConfigUartNVIC(void)
 {
-	NVIC_InitTypeDef NVIC_InitStructure;
+//	NVIC_InitTypeDef NVIC_InitStructure;
 
 	/* Configure the NVIC Preemption Priority Bits */
 	/*	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);  --- 在 bsp.c 中 bsp_Init() 中配置中断优先级组 */
@@ -953,89 +953,90 @@ static uint8_t UartGetChar(UART_T *_pUart, uint8_t *_pByte)
 *	返 回 值: 无
 *********************************************************************************************************
 */
-static void UartIRQ(UART_T *_pUart)
-{
-	/* 处理接收中断  */
-	if (USART_GetITStatus(_pUart->uart, USART_IT_RXNE) != RESET)
-	{
-		/* 从串口接收数据寄存器读取数据存放到接收FIFO */
-		uint8_t ch;
 
-		ch = USART_ReceiveData(_pUart->uart);
-		_pUart->pRxBuf[_pUart->usRxWrite] = ch;
-		if (++_pUart->usRxWrite >= _pUart->usRxBufSize)
-		{
-			_pUart->usRxWrite = 0;
-		}
-		if (_pUart->usRxCount < _pUart->usRxBufSize)
-		{
-			_pUart->usRxCount++;
-		}
+//static void UartIRQ(UART_T *_pUart)
+//{
+//	/* 处理接收中断  */
+//	if (USART_GetITStatus(_pUart->uart, USART_IT_RXNE) != RESET)
+//	{
+//		/* 从串口接收数据寄存器读取数据存放到接收FIFO */
+//		uint8_t ch;
 
-		/* 回调函数,通知应用程序收到新数据,一般是发送1个消息或者设置一个标记 */
-		//if (_pUart->usRxWrite == _pUart->usRxRead)
-		//if (_pUart->usRxCount == 1)
-		{
-			if (_pUart->ReciveNew)
-			{
-				_pUart->ReciveNew(ch);
-			}
-		}
-	}
+//		ch = USART_ReceiveData(_pUart->uart);
+//		_pUart->pRxBuf[_pUart->usRxWrite] = ch;
+//		if (++_pUart->usRxWrite >= _pUart->usRxBufSize)
+//		{
+//			_pUart->usRxWrite = 0;
+//		}
+//		if (_pUart->usRxCount < _pUart->usRxBufSize)
+//		{
+//			_pUart->usRxCount++;
+//		}
 
-	/* 处理发送缓冲区空中断 */
-	if (USART_GetITStatus(_pUart->uart, USART_IT_TXE) != RESET)
-	{
-		//if (_pUart->usTxRead == _pUart->usTxWrite)
-		if (_pUart->usTxCount == 0)
-		{
-			/* 发送缓冲区的数据已取完时， 禁止发送缓冲区空中断 （注意：此时最后1个数据还未真正发送完毕）*/
-			USART_ITConfig(_pUart->uart, USART_IT_TXE, DISABLE);
+//		/* 回调函数,通知应用程序收到新数据,一般是发送1个消息或者设置一个标记 */
+//		//if (_pUart->usRxWrite == _pUart->usRxRead)
+//		//if (_pUart->usRxCount == 1)
+//		{
+//			if (_pUart->ReciveNew)
+//			{
+//				_pUart->ReciveNew(ch);
+//			}
+//		}
+//	}
 
-			/* 使能数据发送完毕中断 */
-			USART_ITConfig(_pUart->uart, USART_IT_TC, ENABLE);
-		}
-		else
-		{
-			/* 从发送FIFO取1个字节写入串口发送数据寄存器 */
-			USART_SendData(_pUart->uart, _pUart->pTxBuf[_pUart->usTxRead]);
-			if (++_pUart->usTxRead >= _pUart->usTxBufSize)
-			{
-				_pUart->usTxRead = 0;
-			}
-			_pUart->usTxCount--;
-		}
+//	/* 处理发送缓冲区空中断 */
+//	if (USART_GetITStatus(_pUart->uart, USART_IT_TXE) != RESET)
+//	{
+//		//if (_pUart->usTxRead == _pUart->usTxWrite)
+//		if (_pUart->usTxCount == 0)
+//		{
+//			/* 发送缓冲区的数据已取完时， 禁止发送缓冲区空中断 （注意：此时最后1个数据还未真正发送完毕）*/
+//			USART_ITConfig(_pUart->uart, USART_IT_TXE, DISABLE);
 
-	}
-	/* 数据bit位全部发送完毕的中断 */
-	else if (USART_GetITStatus(_pUart->uart, USART_IT_TC) != RESET)
-	{
-		//if (_pUart->usTxRead == _pUart->usTxWrite)
-		if (_pUart->usTxCount == 0)
-		{
-			/* 如果发送FIFO的数据全部发送完毕，禁止数据发送完毕中断 */
-			USART_ITConfig(_pUart->uart, USART_IT_TC, DISABLE);
+//			/* 使能数据发送完毕中断 */
+//			USART_ITConfig(_pUart->uart, USART_IT_TC, ENABLE);
+//		}
+//		else
+//		{
+//			/* 从发送FIFO取1个字节写入串口发送数据寄存器 */
+//			USART_SendData(_pUart->uart, _pUart->pTxBuf[_pUart->usTxRead]);
+//			if (++_pUart->usTxRead >= _pUart->usTxBufSize)
+//			{
+//				_pUart->usTxRead = 0;
+//			}
+//			_pUart->usTxCount--;
+//		}
 
-			/* 回调函数, 一般用来处理RS485通信，将RS485芯片设置为接收模式，避免抢占总线 */
-			if (_pUart->SendOver)
-			{
-				_pUart->SendOver();
-			}
-		}
-		else
-		{
-			/* 正常情况下，不会进入此分支 */
+//	}
+//	/* 数据bit位全部发送完毕的中断 */
+//	else if (USART_GetITStatus(_pUart->uart, USART_IT_TC) != RESET)
+//	{
+//		//if (_pUart->usTxRead == _pUart->usTxWrite)
+//		if (_pUart->usTxCount == 0)
+//		{
+//			/* 如果发送FIFO的数据全部发送完毕，禁止数据发送完毕中断 */
+//			USART_ITConfig(_pUart->uart, USART_IT_TC, DISABLE);
 
-			/* 如果发送FIFO的数据还未完毕，则从发送FIFO取1个数据写入发送数据寄存器 */
-			USART_SendData(_pUart->uart, _pUart->pTxBuf[_pUart->usTxRead]);
-			if (++_pUart->usTxRead >= _pUart->usTxBufSize)
-			{
-				_pUart->usTxRead = 0;
-			}
-			_pUart->usTxCount--;
-		}
-	}
-}
+//			/* 回调函数, 一般用来处理RS485通信，将RS485芯片设置为接收模式，避免抢占总线 */
+//			if (_pUart->SendOver)
+//			{
+//				_pUart->SendOver();
+//			}
+//		}
+//		else
+//		{
+//			/* 正常情况下，不会进入此分支 */
+
+//			/* 如果发送FIFO的数据还未完毕，则从发送FIFO取1个数据写入发送数据寄存器 */
+//			USART_SendData(_pUart->uart, _pUart->pTxBuf[_pUart->usTxRead]);
+//			if (++_pUart->usTxRead >= _pUart->usTxBufSize)
+//			{
+//				_pUart->usTxRead = 0;
+//			}
+//			_pUart->usTxCount--;
+//		}
+//	}
+//}*
 
 /*
 *********************************************************************************************************
