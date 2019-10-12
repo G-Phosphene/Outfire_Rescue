@@ -386,45 +386,85 @@ void app_findThirdFire(void){
 			break;
 			}
 			case 8:{
+				outfireRobotState.moveWays = STOP;
+				outfireRobotState.workStep++;
+				break;
+			}
+			case 9:{
+				outfireRobotState.moveWays = REVERSE_RIGHT_TURN_90;
+				outfireRobotState.workStep++;
+				break;
+			}
+			case 10:{
+				outfireRobotState.moveWays = STOP;
+				outfireRobotState.workStep++;
+				break;
+			}
+			case 11:{
+				if(SRF_04_Data1.getDistance >11&& SRF_04_Data2.getDistance >11){
+					outfireRobotState.moveWays = GO_STRAIGHT;
+				}else if(SRF_04_Data1.getDistance <11&& SRF_04_Data2.getDistance <11){
+					outfireRobotState.moveWays = STOP;
+					outfireRobotState.workStep++;
+				}break;
+			}	
+			case 12:{
+				outfireRobotState.moveWays = REVERSE_LEFT_TURN_90;
+				outfireRobotState.workStep++;
+				break;
+			}
+			case 13:{
+				outfireRobotState.moveWays = STOP;
+				outfireRobotState.workStep++;
+				break;
+			}
+			case 14:{
+				outfireRobotState.moveWays = OTHER;
+				calibrationFinish = app_calibration(RIGHT);
+				if(calibrationFinish == CALIBRATION_FINISHED){
+					outfireRobotState.workStep++;
+				}break;
+			}
+			case 15:{
 				calibrationGostraight(LEFT);
 				if(SRF_04_Data1.getDistance < 35 && SRF_04_Data2.getDistance < 35 ){
-					outfireRobotState.workStep = 9;
+					outfireRobotState.workStep++;
 				}
 			break;
 			}
-			case 9:{
+			case 16:{
 				calibrationFinish = app_findFire();
 				outfireRobotState.moveWays = OTHER;
 				if(SRF_04_Data1.getDistance + SRF_04_Data2.getDistance  < DISTANCE_TO_FIRE && calibrationFinish == CALIBRATION_FINISHED){   /**与火焰的距离**/
 					outfireRobotState.moveWays = STOP;
-					outfireRobotState.workStep = 10;
+					outfireRobotState.workStep++;
 				}
 			break;
 			}
-			case 10:{
+			case 17:{
 				app_fan();						
 				calibrationFinish = checkFire();			//开风扇
 				if(calibrationFinish == CALIBRATION_FINISHED){
 					app_goOtherAction(600,LEFT,BEHIND);
-					outfireRobotState.workStep = 11;
+					outfireRobotState.workStep++;
 				}
 				
 			break;
 			}
-			case 11:{
+			case 18:{
 				calibrationFinish = app_calibration(LEFT);
 				outfireRobotState.moveWays = OTHER;
 				if(calibrationFinish == CALIBRATION_FINISHED){
-					outfireRobotState.workStep = 12;
+					outfireRobotState.workStep++;
 				}
 			break;
 			}
-			case 12:{
+			case 19:{
 				app_goOtherAction(500,NO_TURN,BEHIND);
-				outfireRobotState.workStep = 13;
+				outfireRobotState.workStep++;
 			break;
 			}
-			case 13:{
+			case 20:{
 				outfireRobotState.moveWays = STOP;
 				outfireRobotState.workStep = 99;
 			}
@@ -797,8 +837,19 @@ void app_returnFunc(void){
 				outfireRobotState.moveWays = GO_STRAIGHT;
 				if(SRF_04_Data1.getDistance < 35 && SRF_04_Data2.getDistance<35){
 					outfireRobotState.moveWays = FRONT_TURN_LEFT_90;
-					outfireRobotState.workStep = 'f';
+					outfireRobotState.workStep = 'v';
 				}
+				break;
+			}
+			case 'v':{
+				outfireRobotState.moveWays = STOP;
+				outfireRobotState.workStep = 's';
+				break;
+			}
+			case 's':{
+				outfireRobotState.moveWays = GO_STRAIGHT;
+				vTaskDelay(300);
+				outfireRobotState.workStep = 'f';
 				break;
 			}
 			case 'f':{

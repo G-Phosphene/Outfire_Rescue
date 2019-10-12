@@ -35,7 +35,9 @@ void app_findEighthFire(void){
 			}
 			case 1:{
 				calibrationGostraight(LEFT);
-				if(SRF_04_Data1.getDistance <= 17 && SRF_04_Data2.getDistance <= 17){
+				if(SRF_04_Data1.getDistance <= 65 && SRF_04_Data2.getDistance <= 65 && SRF_04_Data1.getDistance > 12 && SRF_04_Data2.getDistance > 12){
+					outfireRobotState.moveWays = GO_STRAIGHT;
+				}else if(SRF_04_Data1.getDistance <= 12 && SRF_04_Data2.getDistance <= 12){
 					outfireRobotState.workStep++;
 				}break;
 			}
@@ -193,7 +195,7 @@ void app_findEighthFire(void){
 				}
 				case 1:{
 					calibrationGostraight(LEFT);
-					if(SRF_04_Data1.getDistance <= 17 && SRF_04_Data2.getDistance <= 17){
+					if(SRF_04_Data1.getDistance <= 18 && SRF_04_Data2.getDistance <= 18){
 						outfireRobotState.workStep++;
 					}break;
 				}
@@ -237,8 +239,9 @@ void app_findEighthFire(void){
 					break;
 				}
 				case 9:{
+					outfireRobotState.moveWays = GO_STRAIGHT;
 					calibrationGostraight(LEFT);
-					if(SRF_04_Data4.getDistance <50){
+					if(SRF_04_Data4.getDistance <60){
 						outfireRobotState.workStep++;
 					}break;
 				}
@@ -268,7 +271,7 @@ void app_findEighthFire(void){
 				}
 				case 14:{
 					outfireRobotState.moveWays = STOP;
-					outfireRobotState.workStep++;
+					outfireRobotState.workStep = 99;
 					break;
 				}
 				case 99:{
@@ -351,7 +354,7 @@ void app_findSixFire(void){
 			case 0:{
 				outfireRobotState.moveWays = GO_STRAIGHT;
 				calibrationGostraight(RIGHT);
-				if(SRF_04_Data1.getDistance <23 && SRF_04_Data2.getDistance <23){
+				if(SRF_04_Data1.getDistance <25 && SRF_04_Data2.getDistance <25){
 					outfireRobotState.moveWays = STOP;
 					outfireRobotState.workStep++;
 				}break;
@@ -911,7 +914,6 @@ void app_findFourthFire(void){
 					}
 					else{
 						outfireRobotState.robotTaskstep = SIXTH_FIRE;
-						
 					}
 					outfireRobotState.moveWays = OTHER;
 					outfireRobotState.workStep = 0;
@@ -1084,10 +1086,10 @@ void app_findSeventhFire(void){
 				}break;
 			}
 			case 12:{
-				outfireRobotState.moveWays = GO_STRAIGHT;
 				calibrationGostraight(RIGHT);
-				if(SRF_04_Data1.getDistance <10 && SRF_04_Data2.getDistance <10){
-					outfireRobotState.moveWays = STOP;
+				if(SRF_04_Data1.getDistance <= 65 && SRF_04_Data2.getDistance <= 65 && SRF_04_Data1.getDistance > 12 && SRF_04_Data2.getDistance > 12){
+					outfireRobotState.moveWays = GO_STRAIGHT;
+				}else if(SRF_04_Data1.getDistance <= 12 && SRF_04_Data2.getDistance <= 12){
 					outfireRobotState.workStep++;
 				}break;
 			}
@@ -1280,7 +1282,7 @@ void app_returnFromSixthFire(void){
 	switch(outfireRobotState.workStep){
 		case 0:{
 			outfireRobotState.moveWays = GO_STRAIGHT;
-			calibrationGostraight(RIGHT);
+			calibrationGostraight(LEFT);
 			if(SRF_04_Data6.getDistance> 40){
 				outfireRobotState.moveWays = STOP;
 				outfireRobotState.workStep++;
@@ -1294,9 +1296,7 @@ void app_returnFromSixthFire(void){
 			}break;
 		}
 		case 2:{
-			outfireRobotState.moveWays = GO_STRAIGHT;
-			calibrationGostraight(LEFT);
-			vTaskDelay(1500);
+			outfireRobotState.moveWays = REVERSE_LEFT_TURN_90;
 			outfireRobotState.workStep++;
 			break;
 		}
@@ -1306,34 +1306,71 @@ void app_returnFromSixthFire(void){
 			break;
 		}
 		case 4:{
-			outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
-			outfireRobotState.workStep++;
-			break;
-		}
+			if(SRF_04_Data1.getDistance >11&& SRF_04_Data2.getDistance >11){
+					outfireRobotState.moveWays = GO_STRAIGHT;
+				}else if(SRF_04_Data1.getDistance <11&& SRF_04_Data2.getDistance <11){
+					outfireRobotState.moveWays = STOP;
+					outfireRobotState.workStep++;
+				}break;
+		}	
 		case 5:{
-			outfireRobotState.moveWays = STOP;
+			outfireRobotState.moveWays = REVERSE_RIGHT_TURN_90;
 			outfireRobotState.workStep++;
 			break;
 		}
 		case 6:{
+			outfireRobotState.moveWays = STOP;
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 7:{
+			outfireRobotState.moveWays = OTHER;
+			calibrationFinish = app_calibration(LEFT);
+			if(calibrationFinish == CALIBRATION_FINISHED){
+				outfireRobotState.workStep++;
+			}break;
+		}
+		case 8:{
+			outfireRobotState.moveWays = GO_STRAIGHT;
+			calibrationGostraight(LEFT);
+			vTaskDelay(1700);
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 9:{
+			outfireRobotState.moveWays = STOP;
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 10:{
+			outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 11:{
+			outfireRobotState.moveWays = STOP;
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 12:{
 			outfireRobotState.moveWays = GO_STRAIGHT;
 			calibrationGostraight(RIGHT);
 			vTaskDelay(450);
 			outfireRobotState.workStep++;
 			break;
 		}
-		case 7:{
+		case 13:{
 			outfireRobotState.moveWays = STOP;
 			outfireRobotState.workStep++;
 			break;
 		}
-		case 8:{
+		case 14:{
 			calibrationFinish = app_calibration(LEFT);
 			if(calibrationFinish == CALIBRATION_FINISHED){
 				outfireRobotState.workStep++;
 			}break;
 		}
-		case 9:{
+		case 15:{
 			outfireRobotState.moveWays = GO_STRAIGHT;
 			calibrationGostraight(RIGHT);
 			if(SRF_04_Data1.getDistance <40 && SRF_04_Data2.getDistance <40){
@@ -1355,7 +1392,7 @@ void app_returnFromFourthFire(void){
 		case 0:{
 			outfireRobotState.moveWays = GO_STRAIGHT;
 			calibrationGostraight(RIGHT);
-			if(SRF_04_Data1.getDistance <18 && SRF_04_Data2.getDistance <18){
+			if(SRF_04_Data1.getDistance <= 17 && SRF_04_Data2.getDistance <= 17){
 				outfireRobotState.moveWays = STOP;
 				outfireRobotState.workStep++;
 			}break;
@@ -1379,7 +1416,7 @@ void app_returnFromFourthFire(void){
 		}
 		case 4:{
 			outfireRobotState.moveWays = GO_STRAIGHT;
-			calibrationGostraight(RIGHT);
+			calibrationGostraight(LEFT);
 			if(SRF_04_Data6.getDistance> 40){
 				outfireRobotState.moveWays = STOP;
 				outfireRobotState.workStep++;
@@ -1393,9 +1430,7 @@ void app_returnFromFourthFire(void){
 			}break;
 		}
 		case 6:{
-			outfireRobotState.moveWays = GO_STRAIGHT;
-			calibrationGostraight(LEFT);
-			vTaskDelay(1200);
+			outfireRobotState.moveWays = REVERSE_LEFT_TURN_90;
 			outfireRobotState.workStep++;
 			break;
 		}
@@ -1405,34 +1440,71 @@ void app_returnFromFourthFire(void){
 			break;
 		}
 		case 8:{
-			outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
-			outfireRobotState.workStep++;
-			break;
-		}
+			if(SRF_04_Data1.getDistance >11&& SRF_04_Data2.getDistance >11){
+					outfireRobotState.moveWays = GO_STRAIGHT;
+				}else if(SRF_04_Data1.getDistance <11&& SRF_04_Data2.getDistance <11){
+					outfireRobotState.moveWays = STOP;
+					outfireRobotState.workStep++;
+				}break;
+		}	
 		case 9:{
-			outfireRobotState.moveWays = STOP;
+			outfireRobotState.moveWays = REVERSE_RIGHT_TURN_90;
 			outfireRobotState.workStep++;
 			break;
 		}
 		case 10:{
+			outfireRobotState.moveWays = STOP;
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 11:{
+			outfireRobotState.moveWays = OTHER;
+			calibrationFinish = app_calibration(LEFT);
+			if(calibrationFinish == CALIBRATION_FINISHED){
+				outfireRobotState.workStep++;
+			}break;
+		}
+		case 12:{
+			outfireRobotState.moveWays = GO_STRAIGHT;
+			calibrationGostraight(LEFT);
+			vTaskDelay(1700);
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 13:{
+			outfireRobotState.moveWays = STOP;
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 14:{
+			outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 15:{
+			outfireRobotState.moveWays = STOP;
+			outfireRobotState.workStep++;
+			break;
+		}
+		case 16:{
 			outfireRobotState.moveWays = GO_STRAIGHT;
 			calibrationGostraight(RIGHT);
 			vTaskDelay(800);
 			outfireRobotState.workStep++;
 			break;
 		}
-		case 11:{
+		case 17:{
 			outfireRobotState.moveWays = STOP;
 			outfireRobotState.workStep++;
 			break;
 		}
-		case 12:{
+		case 18:{
 			calibrationFinish = app_calibration(RIGHT);
 			if(calibrationFinish == CALIBRATION_FINISHED){
 				outfireRobotState.workStep++;
 			}break;
 		}
-		case 13:{
+		case 19:{
 			outfireRobotState.moveWays = GO_STRAIGHT;
 			calibrationGostraight(RIGHT);
 			if(SRF_04_Data1.getDistance <40 && SRF_04_Data2.getDistance <40){
@@ -1472,7 +1544,7 @@ void app_returnFromSenventhFire(void){//²âÊÔÍê³É
 		}
 		case 3:{
 			outfireRobotState.moveWays = GO_STRAIGHT;
-			vTaskDelay(800);
+			vTaskDelay(1500);
 			outfireRobotState.workStep++;
 			break;
 		}
