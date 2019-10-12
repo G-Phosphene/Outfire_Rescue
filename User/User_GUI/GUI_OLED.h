@@ -44,14 +44,31 @@ typedef enum{
 	FIRE1 = 0,
 	FIRE2,
 	FIRE3,
-	FIRE4,
+	FIRE9,
+	CLEAR_ALL01,
+}fireChoose01_e;
+
+typedef enum{
+	FIRE4 = 0,
 	FIRE5,
 	FIRE6,
 	FIRE7,
 	FIRE8,
-	FIRE9,
-	CLEAR_ALL,
-}fireChoose_e;
+	CLEAR_ALL02,
+}fireChoose02_e;
+
+typedef enum{
+	ROOM1 = 0,
+	ROOM2,
+	ROOM3,
+	ROOM4,
+}rescueman_e;
+
+typedef enum{
+	FIRE01,
+	FIRE02,
+	RESCUEMAN,
+}Choose_e;
 
 typedef enum{
 	GRAB_TEST = 0,

@@ -92,9 +92,8 @@ typedef enum{
 typedef enum{
 	TEST = 0,
 	OUT_FIRE ,
+	RESCUEING,
 }workMode_e;
-
-
 
 typedef enum{
 	STOP = 1,
@@ -137,10 +136,33 @@ typedef enum{
 	FREE,
 }beginFlag_e;
 
+typedef struct{ //方向控制限位标志
+  u8 forward;
+  u8 left;
+  u8 right;	
+}LimiFlag_t;
+typedef enum{
+	stop = 0,
+  go,
+}work_e;
+
+extern LimiFlag_t LimiFlag;
 extern moveWays_e finishFlag;
 extern calibrationFinish_e calibrationFinish;
-
-
+extern uint8_t speed_cut;
+/////////////抓取机构控制/////////
+void app_CLAW_UPorDOWN(uint8_t mode,uint32_t rata);
+void app_CLAW_HOLDorUNON(uint8_t mode,uint32_t rata);
+void app_CAMERA_UPorDOWN(uint8_t mode,uint32_t rate);
+void rescue_AUTOTASK_PUTCLAW(void);
+void rescue_AUTOTASK_HOLDCLAW(void);
+/////////////////////////////////
+/////////////串口控制限位/////////
+void app_UCLIMI_FORNT(float distance1,float distance2); //前限位
+void app_UCLIMI_LEFT(float distance1,float distance2);  //左限位
+void app_UCLIMI_RIGHT(float distance,float distance2); //右限位
+void app_UCLIMI_SPEED(float distance,float distance2);//速度控制
+//////////////////////////////////
 
 void app_LeftWheel(uint8_t mode,uint32_t rate);
 void app_RightWheel(uint8_t mode,uint32_t rate);

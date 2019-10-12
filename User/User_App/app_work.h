@@ -2,7 +2,6 @@
 #define _APP_WORK_H
 
 
-
 typedef enum{
 	INIT = 0,
   READY,
@@ -23,6 +22,19 @@ typedef enum{
 	RETURN,
 }robotTaskstep_e;
 
+typedef enum{
+	ROOM_ONE = 0,
+	ROOM_TWO,
+	ROOM_THREE,
+	ROOM_FOUR,
+}rescueSelect_e;
+
+typedef enum{
+	WALKING_MODE = 0,
+	DRIVING_MODE,
+	DRIVER_INDEEP,
+}rescueTaskstep_e;
+
 typedef enum{	
 	ALL_OFF= 0,
 	BEHIND_ON,
@@ -39,6 +51,7 @@ typedef enum{
 	WORK_PRIORITY = 3,
 	WORK_STACK_SIZE = 512,
 }appWork_e;
+
 
 
 void app_fan(void);

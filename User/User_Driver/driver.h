@@ -10,7 +10,7 @@
 #include "driver_key.h"
 #include "driver_echo.h"
 #include "driver_linearMovement.h"
-
+#include "HJ_USART.h"
 void driver_Init(void);
 
 #endif

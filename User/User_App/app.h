@@ -104,10 +104,9 @@ typedef struct{
 	robotTaskstep_e robotTaskstep;
 	workMode_e workMode;
 	turnDirection_e useDir;
-	uint8_t fireArray[10] ;
-	uint8_t returnFlag[10];
-	uint16_t ADCDataLeft;
-	uint16_t ADCDataRight;
+	rescueSelect_e rescuePosition;
+	rescueTaskstep_e rescueTaskstep;
+	uint8_t returnFlag[4];
 }rescueRobotState_t;
 
 typedef struct{
@@ -121,6 +120,7 @@ typedef struct {
 }appStruct_t;
 
 extern outfireRobotState_t outfireRobotState;
+extern rescueRobotState_t rescueRobotState;
 extern appStruct_t app;
 extern uint32_t parameter[NAME_OF_LIST];
 extern robotSelectStruct_t robotSelect;

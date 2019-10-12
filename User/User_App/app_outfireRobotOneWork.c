@@ -948,47 +948,6 @@ void app_returnFunc(void){
 		outfireRobotState.step = FINISH;
 	}		//路线1
 }
-void app_judgeFunc(void){
-	uint8_t roadCase = 1;
-	switch(roadCase){
-		case 1:{
-			if(outfireRobotState.fireArray[NINTH_FIRE] == 0&&outfireRobotState.fireArray[THIRD_FIRE] == 0&&outfireRobotState.fireArray[SECOND_FIRE] == 0 && outfireRobotState.fireArray[FIRST_FIRE] == 0){
-					outfireRobotState.returnFlag[RETURN] = 1;
-					break;
-				}
-					roadCase = 2;
-			}
-		case 2:{
-			if(outfireRobotState.fireArray[NINTH_FIRE] == 0&&outfireRobotState.fireArray[THIRD_FIRE] == 0&&outfireRobotState.fireArray[SECOND_FIRE] == 0){
-					outfireRobotState.returnFlag[FIRST_FIRE] = 1;
-					break;
-				}
-					roadCase = 3;
-			}
-		case 3:{
-			if(outfireRobotState.fireArray[THIRD_FIRE] == 0&&outfireRobotState.fireArray[SECOND_FIRE] == 0){
-					outfireRobotState.returnFlag[NINTH_FIRE] = 1;
-					break;
-				}
-					roadCase = 4;
-			}
-		case 4:{
-			if(outfireRobotState.fireArray[SECOND_FIRE] == 0){
-					outfireRobotState.returnFlag[THIRD_FIRE] = 1;
-					break;
-				}
-					roadCase = 5;
-			}
-		case 5:{
-			outfireRobotState.returnFlag[SECOND_FIRE] = 1;
-			roadCase = 1;
-			break;
-			}
-	}
-	if(outfireRobotState.returnFlag[RETURN] == 1){   //全无火   直接到最后一步
-			outfireRobotState.robotTaskstep = RETURN;
-		}
-}
 
 /***寻火任务**/
 void app_outfireOneWorkDoing(void){

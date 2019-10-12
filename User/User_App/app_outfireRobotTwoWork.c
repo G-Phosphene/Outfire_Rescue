@@ -5,25 +5,21 @@
 void app_outfireTwoWorkReady(void)
 {
 	/*待补充*/ //用按键控制小车启动//
-	int i;
-	/*待补充*/ //用按键控制小车启动//
 	//finishFlag = SET_ZERO;
 	if(outfireRobotState.workMode == OUT_FIRE){
-		outfireRobotState.robotTaskstep = EIGHTH_FIRE;
-		outfireRobotState.step = DOING;
-		outfireRobotState.workStep = NULL;
-		for(i = 0;i < 9;i++){outfireRobotState.returnFlag[i] = 0;} //初始化火点寻找和返回函数
-		for(i = 0;i < 9;i++){outfireRobotState.fireArray[i] = 0;}
-		/***********初始化火点位置*********/
-		outfireRobotState.fireArray[SIXTH_FIRE] = 0;
-		outfireRobotState.fireArray[FOURTH_FIRE] = 1;
-		outfireRobotState.fireArray[FIFTH_FIRE] = 0;
-		outfireRobotState.fireArray[EIGHTH_FIRE] = 1;
-		outfireRobotState.fireArray[SENVENTH_FIRE] = 0;
-		outfireRobotState.returnFlag[FOURTH_FIRE] = 1;
-//		app_judgeFuncforTwo();
-		if(outfireRobotState.returnFlag[RETURN] == 1){   //全无火   直接到最后一步
+			app_judgeFunc();	
+		if(outfireRobotState.returnFlag[RETURN] == 0){
+			outfireRobotState.robotTaskstep = EIGHTH_FIRE;
+			outfireRobotState.step = DOING;
+			outfireRobotState.workStep = NULL;
+			outfireRobotState.moveWays = STOP;
+			outfireRobotState.beginFlag = FREE;
+		}else if(outfireRobotState.returnFlag[RETURN] == 1){
 			outfireRobotState.robotTaskstep = RETURN;
+			outfireRobotState.step = DOING;
+			outfireRobotState.workStep = NULL;
+			outfireRobotState.moveWays = STOP;
+				outfireRobotState.beginFlag = FREE;
 		}
 	}
 }
@@ -91,7 +87,7 @@ void app_findEighthFire(void){
 			case 10:{
 				app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
 				app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-				vTaskDelay(1000);
+				vTaskDelay(1200);
 				app_LeftWheel(FRONT,parameter[NAME_SET_ZERO__LEFT_RATE]);
 				app_RightWheel(FRONT,parameter[NAME_SET_ZERO__RIGHT_RATE]);
 				outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
@@ -247,23 +243,19 @@ void app_findEighthFire(void){
 					}break;
 				}
 				case 10:{
-					app_LeftWheel(FRONT,parameter[NAME_GO_STRAIGHT__LEFT_RATE]);
-					app_RightWheel(FRONT,parameter[NAME_GO_STRAIGHT__RIGHT_RATE]);
-					vTaskDelay(1000);
-					app_LeftWheel(FRONT,parameter[NAME_SET_ZERO__LEFT_RATE]);
-					app_RightWheel(FRONT,parameter[NAME_SET_ZERO__RIGHT_RATE]);
-					outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
+					outfireRobotState.moveWays = STOP;
 					outfireRobotState.workStep++;
 					break;
 				}
 				case 11:{
-					outfireRobotState.moveWays = FRONT_TURN_LEFT_90;
-					outfireRobotState.workStep++;
-					break;
+					calibrationFinish = app_calibration(LEFT);
+					if(calibrationFinish == CALIBRATION_FINISHED){
+						outfireRobotState.workStep++;
+					}break;
 				}
 				case 12:{
 					outfireRobotState.moveWays = GO_STRAIGHT;
-					calibrationGostraight(RIGHT);
+					calibrationGostraight(LEFT);
 					if(SRF_04_Data1.getDistance <30 && SRF_04_Data2.getDistance <30){
 						outfireRobotState.moveWays = STOP;
 						outfireRobotState.workStep++;
@@ -271,7 +263,12 @@ void app_findEighthFire(void){
 				}
 				case 13:{
 					outfireRobotState.moveWays = REVERSE_RIGHT_TURN_90;
-					outfireRobotState.workStep=99;
+					outfireRobotState.workStep++;
+					break;
+				}
+				case 14:{
+					outfireRobotState.moveWays = STOP;
+					outfireRobotState.workStep++;
 					break;
 				}
 				case 99:{
@@ -584,7 +581,7 @@ void app_findFourthFire(void){
 				}break;
 			}
 			case 27:{
-				app_goBack(600,NO_TURN);
+				app_goBack(500,NO_TURN);
 				outfireRobotState.workStep++;
 				break;
 			}
@@ -606,7 +603,7 @@ void app_findFourthFire(void){
 				}break;
 			}
 			case 99:{
-				if(outfireRobotState.returnFlag[FOURTH_FIRE] == 1){
+				if(outfireRobotState.returnFlag[FOURTH_FIRE] == 1 || outfireRobotState.returnFlag[FIFTH_FIRE] == 1){
 					outfireRobotState.robotTaskstep = RETURN;
 				}
 				else{
@@ -1546,50 +1543,4 @@ void app_outfireTwoWorkDoing(void){
 		}
 	}
 
-}
-
-void app_judgeFuncforTwo(void){
-	uint8_t roadCase = 1;
-	switch(roadCase){
-		case 1:{
-			if(outfireRobotState.fireArray[EIGHTH_FIRE] == 0&&outfireRobotState.fireArray[SENVENTH_FIRE] == 0 && outfireRobotState.fireArray[SIXTH_FIRE] == 0 && outfireRobotState.fireArray[FOURTH_FIRE] == 0 && outfireRobotState.fireArray[FIFTH_FIRE]){
-					outfireRobotState.returnFlag[RETURN] = 1;
-					break;
-				}
-					roadCase = 2;
-			}
-		case 2:{
-			if(outfireRobotState.fireArray[SENVENTH_FIRE] == 0&&outfireRobotState.fireArray[SIXTH_FIRE] == 0&&outfireRobotState.fireArray[FOURTH_FIRE] == 0 && outfireRobotState.fireArray[FIFTH_FIRE]){
-					outfireRobotState.returnFlag[EIGHTH_FIRE] = 1;
-					break;
-				}
-					roadCase = 3;
-			}
-		case 3:{
-			if(outfireRobotState.fireArray[SIXTH_FIRE] == 0 && outfireRobotState.fireArray[FOURTH_FIRE] == 0 && outfireRobotState.fireArray[FIFTH_FIRE] == 0){
-					outfireRobotState.returnFlag[SENVENTH_FIRE] = 1;
-					break;
-				}
-					roadCase = 4;
-			}
-		case 4:{
-			if(outfireRobotState.fireArray[SIXTH_FIRE] == 0 && outfireRobotState.fireArray[FIFTH_FIRE] == 0 ){
-					outfireRobotState.returnFlag[FOURTH_FIRE] = 1;
-					break;
-				}
-					roadCase = 5;
-			}
-		case 5:{
-			if(outfireRobotState.fireArray[SIXTH_FIRE] == 0){
-				outfireRobotState.returnFlag[FIFTH_FIRE] = 1;
-				break;
-			}
-			roadCase = 6;
-		}
-		case 6:{
-			outfireRobotState.returnFlag[SIXTH_FIRE] = 1;
-			roadCase = 1;
-			break;
-		}
-	}
 }

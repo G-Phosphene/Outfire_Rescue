@@ -9,6 +9,7 @@ menuStruct_t testModeMenu,workChooseMenu,fireChooseMenu;			      //Ö÷²Ëµ¥µÄ×Ó²Ëµ
 menuStruct_t testHcSr04Menu;
 menuStruct_t testWalkMenu,testWalkMoreParameterMenu;
 menuStruct_t clawGrabMenu,clawMoveMenu,cameraSiteMenu;
+menuStruct_t FOMenu,FTMenu,RMenu;
 
 menuStruct_t *currentMenu;										      //µ±Ç°²Ëµ¥
 
@@ -23,7 +24,7 @@ void menuInit()
 		mainMenu.currentOption = 0;
 		mainMenu.menuOption[0] = "TestMode";
 		mainMenu.menuOption[1] = "WorkChoose";
-		mainMenu.menuOption[2] = "FIRE_CHOOSE";
+		mainMenu.menuOption[2] = "TYPE_CHOOSE";
 		mainMenu.subMenu = malloc(sizeof(menuStruct_t *) * mainMenu.subMenuNumber);
 		mainMenu.subMenu[0] = &testModeMenu;
 		mainMenu.subMenu[1] = &workChooseMenu;
@@ -82,57 +83,102 @@ void menuInit()
 	{
 		workChooseMenu.showFrom = 0;
 		workChooseMenu.showTo = 3;
-		workChooseMenu.subMenuNumber = 4;
+		workChooseMenu.subMenuNumber = 2;
 		workChooseMenu.currentOption = 0;
 		workChooseMenu.menuOption[0] = "TestMode";
 		workChooseMenu.menuOption[1] = "WorkMode";
-//		workChooseMenu.menuOption[2] = "FIRE1";
-//		workChooseMenu.menuOption[3] = "FIRE2";
 		workChooseMenu.subMenu = malloc(sizeof(menuStruct_t *) * workChooseMenu.subMenuNumber);
 		for(i = 0;i<2;i++){
 			workChooseMenu.subMenu[i] = NULL;
 		}
-//		workChooseMenu.subMenu[2] = &fireOMenu;
-//		workChooseMenu.subMenu[3] = &fireTMenu;
 		workChooseMenu.preMenu = &mainMenu;
 		workChooseMenu.func = (void (**)(void))malloc(sizeof(NULL) * workChooseMenu.subMenuNumber);
-		
-		//		workChooseMenu.func[1] = testSr04Function;
 		for(i = 0;i<2;i++){
 			workChooseMenu.func[i] = workChoose;
 		}
 	}
-	
 	/***************************fireChoose²Ëµ¥*********************************************/
 	{
 		fireChooseMenu.showFrom = 0;
 		fireChooseMenu.showTo = 3;
-		fireChooseMenu.subMenuNumber = 10;
+		fireChooseMenu.subMenuNumber = 3;
 		fireChooseMenu.currentOption = 0;
-		fireChooseMenu.menuOption[0] = "fire-1";
-		fireChooseMenu.menuOption[1] = "fire-2";
-		fireChooseMenu.menuOption[2] = "fire-3";
-		fireChooseMenu.menuOption[3] = "fire-4";
-		fireChooseMenu.menuOption[4] = "fire-5";
-		fireChooseMenu.menuOption[5] = "fire-6";
-		fireChooseMenu.menuOption[6] = "fire-7";
-		fireChooseMenu.menuOption[7] = "fire-8";
-		fireChooseMenu.menuOption[8] = "fire-9";
-		fireChooseMenu.menuOption[9] = "clear_all";
+		fireChooseMenu.menuOption[0] = "FIRE-01";
+		fireChooseMenu.menuOption[1] = "FIRE-02";
+		fireChooseMenu.menuOption[2] = "RESCUE";
 		fireChooseMenu.subMenu = malloc(sizeof(menuStruct_t *) * fireChooseMenu.subMenuNumber);
-		for(i = 0;i<10;i++){
-			fireChooseMenu.subMenu[i] = NULL;
-		}
+		fireChooseMenu.subMenu[0] = &FOMenu;
+		fireChooseMenu.subMenu[1] = &FTMenu;
+		fireChooseMenu.subMenu[2] = &RMenu;
 		fireChooseMenu.preMenu = &mainMenu;
 		fireChooseMenu.func = (void (**)(void))malloc(sizeof(NULL) * fireChooseMenu.subMenuNumber);
-		for(i = 0;i<10;i++){
-			fireChooseMenu.func[i] = &fireChoose;
+		for(i = 0;i<3;i++){
+			fireChooseMenu.func[i] = NULL;
 		}
-	
-	
 	}
-	
-	
+	/***************************FO²Ëµ¥*********************************************/
+	{
+		FOMenu.showFrom = 0;
+		FOMenu.showTo = 3;
+		FOMenu.subMenuNumber = 5;
+		FOMenu.currentOption = 0;
+		FOMenu.menuOption[0] = "fire1";
+		FOMenu.menuOption[1] = "fire2";
+		FOMenu.menuOption[2] = "fire3";
+		FOMenu.menuOption[3] = "fire9";
+		FOMenu.menuOption[4] = "CLEAR_ALL";
+		FOMenu.subMenu = malloc(sizeof(menuStruct_t *) * FOMenu.subMenuNumber);
+		for(i = 0;i < 5;i++){
+			FOMenu.subMenu[i] = NULL;
+		}
+		FOMenu.preMenu = &fireChooseMenu;
+		FOMenu.func = (void (**)(void))malloc(sizeof(NULL) * FOMenu.subMenuNumber);
+		for(i = 0;i<5;i++){
+			FOMenu.func[i] = fireChoose;
+		}
+	}
+	/***************************FT²Ëµ¥*********************************************/
+	{
+		FTMenu.showFrom = 0;
+		FTMenu.showTo = 3;
+		FTMenu.subMenuNumber = 6;
+		FTMenu.currentOption = 0;
+		FTMenu.menuOption[0] = "fire4";
+		FTMenu.menuOption[1] = "fire5";
+		FTMenu.menuOption[2] = "fire6";
+		FTMenu.menuOption[3] = "fire7";
+		FTMenu.menuOption[4] = "fire8";
+		FTMenu.menuOption[5] = "CLEAR_ALL";
+		FTMenu.subMenu = malloc(sizeof(menuStruct_t *) * FTMenu.subMenuNumber);
+		for(i = 0;i < 6;i++){
+			FTMenu.subMenu[i] = NULL;
+		}
+		FTMenu.preMenu = &fireChooseMenu;
+		FTMenu.func = (void (**)(void))malloc(sizeof(NULL) * FTMenu.subMenuNumber);
+		for(i = 0;i<6;i++){
+			FTMenu.func[i] = fireChoose;
+		}
+	}
+	/***************************R²Ëµ¥*********************************************/
+	{
+		RMenu.showFrom = 0;
+		RMenu.showTo = 3;
+		RMenu.subMenuNumber = 4;
+		RMenu.currentOption = 0;
+		RMenu.menuOption[0] = "ROOM1";
+		RMenu.menuOption[1] = "ROOM2";
+		RMenu.menuOption[2] = "ROOM3";
+		RMenu.menuOption[3] = "ROOM4";
+		RMenu.subMenu = malloc(sizeof(menuStruct_t *) * RMenu.subMenuNumber);
+		for(i = 0;i < 4;i++){
+			RMenu.subMenu[i] = NULL;
+		}
+		RMenu.preMenu = &fireChooseMenu;
+		RMenu.func = (void (**)(void))malloc(sizeof(NULL) * RMenu.subMenuNumber);
+		for(i = 0;i<4;i++){
+			RMenu.func[i] = fireChoose;
+		}
+	}
 	/***************************testWalk²Ëµ¥*********************************************/
 	{
 		testWalkMenu.showFrom = 0;
@@ -645,6 +691,7 @@ void testSr04Function(void)
 	switch(oled.keyValue){
 		case OLED_BACK:{
 			outfireRobotState.step = INIT;
+			rescueRobotState.step = INIT;
 			currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
 			break;
 		}
@@ -654,6 +701,8 @@ void testSr04Function(void)
 		case OLED_SAVE:{
 			outfireRobotState.workMode = OUT_FIRE;
 			outfireRobotState.step = READY;
+			rescueRobotState.workMode = RESCUEING;
+			rescueRobotState.step = READY;
 		break;
 		}
 	}
@@ -674,34 +723,35 @@ void testWalkFuction(void)
 			switch(oled.keyValue){
 				case OLED_ENTER:{
 						currentMenu -> displayFlag = TEST_FLAG;
-						if(outfireRobotState.testTarget != TESTING){
+						if(outfireRobotState.testTarget != TESTING||rescueRobotState.testTarget != TESTING){
 						switch(currentMenu ->preMenu->currentOption){
 							case 1:{break;}
 							case 2:{break;}
 							case 3:{break;}
-							case 4:{outfireRobotState.moveWays = FRONT_TURN_LEFT_90 ;break;}
-							case 5:{outfireRobotState.moveWays = FRONT_TURN_LEFT_180;break;}
-							case 6:{outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;break;}
-							case 7:{outfireRobotState.moveWays = FRONT_TURN_RIGHT_180;break;}
-							case 8:{outfireRobotState.moveWays = FRONT_TURN_LEFT_135;break;}
-							case 9:{outfireRobotState.moveWays = FRONT_TURN_LEFT_45;break;}
-							case 10:{outfireRobotState.moveWays = FRONT_TURN_RIGHT_135;break;}
-							case 11:{outfireRobotState.moveWays = FRONT_TURN_RIGHT_45;break;}
-							case 12:{outfireRobotState.moveWays = BEHIND_TURN_LEFT_45;break;}
-							case 13:{outfireRobotState.moveWays = BEHIND_TURN_RIGHT_45;break;}
-							case 14:{outfireRobotState.moveWays = REVERSE_LEFT_TURN_45;break;}
-							case 15:{outfireRobotState.moveWays = REVERSE_RIGHT_TURN_45;break;}
-							case 16:{outfireRobotState.moveWays = REVERSE_LEFT_TURN_90;break;}
-							case 17:{outfireRobotState.moveWays = REVERSE_RIGHT_TURN_90;break;}
-							case 18:{outfireRobotState.moveWays = REVERSE_LEFT_TURN_135;break;}
-							case 19:{outfireRobotState.moveWays = REVERSE_RIGHT_TURN_135;break;}
-							case 20:{outfireRobotState.moveWays = REVERSE_LEFT_TURN_180;break;}
-							case 21:{outfireRobotState.moveWays = REVERSE_RIGHT_TURN_180;break;}
-							case 22:{outfireRobotState.moveWays = GO_STRAIGHT;break;} 
+							case 4:{outfireRobotState.moveWays = FRONT_TURN_LEFT_90;rescueRobotState.moveWays = FRONT_TURN_LEFT_90;break;}
+							case 5:{outfireRobotState.moveWays = FRONT_TURN_LEFT_180;rescueRobotState.moveWays = FRONT_TURN_LEFT_180;break;}
+							case 6:{outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;rescueRobotState.moveWays = FRONT_TURN_RIGHT_90;break;}
+							case 7:{outfireRobotState.moveWays = FRONT_TURN_RIGHT_180;rescueRobotState.moveWays = FRONT_TURN_RIGHT_180;break;}
+							case 8:{outfireRobotState.moveWays = FRONT_TURN_LEFT_135;rescueRobotState.moveWays = FRONT_TURN_LEFT_135;break;}
+							case 9:{outfireRobotState.moveWays = FRONT_TURN_LEFT_45;rescueRobotState.moveWays = FRONT_TURN_LEFT_45;break;}
+							case 10:{outfireRobotState.moveWays = FRONT_TURN_RIGHT_135;rescueRobotState.moveWays = FRONT_TURN_RIGHT_135;break;}
+							case 11:{outfireRobotState.moveWays = FRONT_TURN_RIGHT_45;rescueRobotState.moveWays = FRONT_TURN_RIGHT_45;break;}
+							case 12:{outfireRobotState.moveWays = BEHIND_TURN_LEFT_45;rescueRobotState.moveWays = BEHIND_TURN_LEFT_45;break;}
+							case 13:{outfireRobotState.moveWays = BEHIND_TURN_RIGHT_45;rescueRobotState.moveWays = BEHIND_TURN_RIGHT_45;break;}
+							case 14:{outfireRobotState.moveWays = REVERSE_LEFT_TURN_45;rescueRobotState.moveWays = REVERSE_LEFT_TURN_45;break;}
+							case 15:{outfireRobotState.moveWays = REVERSE_RIGHT_TURN_45;rescueRobotState.moveWays = REVERSE_RIGHT_TURN_45;break;}
+							case 16:{outfireRobotState.moveWays = REVERSE_LEFT_TURN_90;rescueRobotState.moveWays = REVERSE_LEFT_TURN_90;break;}
+							case 17:{outfireRobotState.moveWays = REVERSE_RIGHT_TURN_90;rescueRobotState.moveWays = REVERSE_RIGHT_TURN_90;break;}
+							case 18:{outfireRobotState.moveWays = REVERSE_LEFT_TURN_135;rescueRobotState.moveWays = REVERSE_LEFT_TURN_135;break;}
+							case 19:{outfireRobotState.moveWays = REVERSE_RIGHT_TURN_135;rescueRobotState.moveWays = REVERSE_RIGHT_TURN_135;break;}
+							case 20:{outfireRobotState.moveWays = REVERSE_LEFT_TURN_180;rescueRobotState.moveWays = REVERSE_LEFT_TURN_180;break;}
+							case 21:{outfireRobotState.moveWays = REVERSE_RIGHT_TURN_180;rescueRobotState.moveWays = REVERSE_RIGHT_TURN_180;break;}
+							case 22:{outfireRobotState.moveWays = GO_STRAIGHT;rescueRobotState.moveWays = GO_STRAIGHT;break;} 
 							default:break;
 						}
 						OLED_Clear();
 						outfireRobotState.testTarget = TESTING;
+						rescueRobotState.testTarget = TESTING;
 					}
 						OLED_ShowString(42,0,"Testing",16);
 						OLED_ShowString(42,2,currentMenu ->preMenu->menuOption[currentMenu ->preMenu->currentOption],16);
@@ -709,6 +759,8 @@ void testWalkFuction(void)
 				}
 				case OLED_BACK: {
 					currentMenu -> displayFlag = UPDATEMENU_FLAG;
+					rescueRobotState.testTarget = WAITING;
+					rescueRobotState.moveWays = STOP;
 					outfireRobotState.testTarget = WAITING;
 					outfireRobotState.moveWays = STOP;
 					break;	
@@ -719,7 +771,7 @@ void testWalkFuction(void)
 		}
 		case LEFT_WHEEL:{
 			currentMenu -> displayFlag = FUNCTION_MANUAL_FLAG;
-			switch(currentMenu ->preMenu->currentOption){
+			switch(currentMenu->preMenu->currentOption){
 				case 0:break;
 				case 1:break;
 				case 2:break;
@@ -885,6 +937,8 @@ void workChoose(void)
 					OLED_ShowString(0,0,"ChooseTest",16);
 					outfireRobotState.workMode = TEST;
 					outfireRobotState.step = INIT;
+					rescueRobotState.workMode = TEST;
+					rescueRobotState.step = INIT;
 					break;
 				}
 			}
@@ -900,209 +954,297 @@ void workChoose(void)
 					OLED_Clear();
 					OLED_ShowString(0,0,"ChooseWork",16);
 					outfireRobotState.workMode = OUT_FIRE;
+					rescueRobotState.workMode = RESCUEING;
+					rescueRobotState.step = READY;
 					outfireRobotState.step = READY;
 					break;
 				}
 			}
 		break;}
 	}
-//	OLED_ShowString(40,0,"WaitingChoose",16);
 }
+
 void fireChoose(void){
-		int i;
-	switch(currentMenu -> currentOption){
-		case FIRE1:{
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
+	int i;
+	switch(currentMenu -> preMenu -> currentOption){
+		case FIRE01:{
+			robotSelect.robotSelect = OUT_FIRE1;
+			switch(currentMenu -> currentOption){
+				case FIRE1:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[FIRST_FIRE]){
+								outfireRobotState.fireArray[FIRST_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[FIRST_FIRE]){
+								outfireRobotState.fireArray[FIRST_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
 				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[FIRST_FIRE]){
-						outfireRobotState.fireArray[FIRST_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
+				case FIRE2:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[SECOND_FIRE]){
+								outfireRobotState.fireArray[SECOND_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[SECOND_FIRE]){
+								outfireRobotState.fireArray[SECOND_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
+				}
+				case FIRE3:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[THIRD_FIRE]){
+								outfireRobotState.fireArray[THIRD_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[THIRD_FIRE]){
+								outfireRobotState.fireArray[THIRD_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
+				}
+				case FIRE9:{	
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[FOURTH_FIRE]){
+								outfireRobotState.fireArray[FOURTH_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[FOURTH_FIRE]){
+								outfireRobotState.fireArray[FOURTH_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
+				}
+				case CLEAR_ALL01:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							for(i = 0;i < 9;i++){outfireRobotState.returnFlag[i] = 0;} //³õÊ¼»¯»ðµãÑ°ÕÒºÍ·µ»Øº¯Êý
+							for(i = 0;i < 9;i++){outfireRobotState.fireArray[i] = 0;}
+							OLED_ShowString(0,0,"CLEAR_ALL",16);
+							OLED_ShowString(0,2,"SUCCESSFULY",16);
+							break;
+						}
 					}
-					else if(!outfireRobotState.fireArray[FIRST_FIRE]){
-						outfireRobotState.fireArray[FIRST_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
+				}
+			}
+			break;
+		}
+		case FIRE02:{
+			robotSelect.robotSelect = OUT_FIRE2;
+			switch(currentMenu -> currentOption){
+				case FIRE4:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[FOURTH_FIRE]){
+								outfireRobotState.fireArray[FOURTH_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[FOURTH_FIRE]){
+								outfireRobotState.fireArray[FOURTH_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
+				}
+				case FIRE5:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[FIFTH_FIRE]){
+								outfireRobotState.fireArray[FIFTH_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[FIFTH_FIRE]){
+								outfireRobotState.fireArray[FIFTH_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
+				}
+				case FIRE6:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[SIXTH_FIRE]){
+								outfireRobotState.fireArray[SIXTH_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[SIXTH_FIRE]){
+								outfireRobotState.fireArray[SIXTH_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
+				}
+				case FIRE7:{	
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[SENVENTH_FIRE]){
+								outfireRobotState.fireArray[SENVENTH_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[SENVENTH_FIRE]){
+								outfireRobotState.fireArray[SENVENTH_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
+				}
+				case FIRE8:{	
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							if(outfireRobotState.fireArray[EIGHTH_FIRE]){
+								outfireRobotState.fireArray[EIGHTH_FIRE] = 0;
+								OLED_ShowString(0,0,"CHOOSE_NO",16);
+							}
+							else if(!outfireRobotState.fireArray[EIGHTH_FIRE]){
+								outfireRobotState.fireArray[EIGHTH_FIRE] = 1;
+								OLED_ShowString(0,0,"CHOOSE_YES",16);
+							}break;
+						}
+					}break;
+				}
+				case CLEAR_ALL02:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							for(i = 0;i < 9;i++){outfireRobotState.returnFlag[i] = 0;} //³õÊ¼»¯»ðµãÑ°ÕÒºÍ·µ»Øº¯Êý
+							for(i = 0;i < 9;i++){outfireRobotState.fireArray[i] = 0;}
+							OLED_ShowString(0,0,"CLEAR_ALL",16);
+							OLED_ShowString(0,2,"SUCCESSFULY",16);
+							break;
+						}
+					}break;
+				}
+			}
+			break;
+		}
+		case RESCUEMAN:{
+			robotSelect.robotSelect = RESCUE;
+			switch(currentMenu -> currentOption){
+				case ROOM1:{	
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							rescueRobotState.rescuePosition = ROOM_ONE;
+							OLED_ShowString(0,0,"ROOM1_OK",16);
+						}break;
 					}
 					break;
 				}
-			}break;}
-		case FIRE2:{
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[SECOND_FIRE]){
-						outfireRobotState.fireArray[SECOND_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
-					}
-					else if(!outfireRobotState.fireArray[SECOND_FIRE]){
-						outfireRobotState.fireArray[SECOND_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
+				case ROOM2:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							rescueRobotState.rescuePosition = ROOM_TWO;
+							OLED_ShowString(0,0,"ROOM2_OK",16);
+						}break;
 					}
 					break;
 				}
-			}break;}
-		case FIRE3:{
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[THIRD_FIRE]){
-						outfireRobotState.fireArray[THIRD_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
-					}
-					else if(!outfireRobotState.fireArray[THIRD_FIRE]){
-						outfireRobotState.fireArray[THIRD_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
+				case ROOM3:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							rescueRobotState.rescuePosition = ROOM_THREE;
+							OLED_ShowString(0,0,"ROOM3_OK",16);
+						}break;
 					}
 					break;
 				}
-			}break;}
-		case FIRE4:{	
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[FOURTH_FIRE]){
-						outfireRobotState.fireArray[FOURTH_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
-					}
-					else if(!outfireRobotState.fireArray[FOURTH_FIRE]){
-						outfireRobotState.fireArray[FOURTH_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
+				case ROOM4:{
+					switch(oled.keyValue){
+						case OLED_BACK:{
+							currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
+							break;
+						}
+						case OLED_ENTER:{
+							OLED_Clear();
+							rescueRobotState.rescuePosition = ROOM_FOUR;
+							OLED_ShowString(0,0,"ROOM4_OK",16);
+						}break;
 					}
 					break;
 				}
-			}break;}
-		case FIRE5:{
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[FIFTH_FIRE]){
-						outfireRobotState.fireArray[FIFTH_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
-					}
-					else if(!outfireRobotState.fireArray[FIFTH_FIRE]){
-						outfireRobotState.fireArray[FIFTH_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
-					}
-					break;
-				}
-			}break;}
-		case FIRE6:{
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[SIXTH_FIRE]){
-						outfireRobotState.fireArray[SIXTH_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
-					}
-					else if(!outfireRobotState.fireArray[SIXTH_FIRE]){
-						outfireRobotState.fireArray[SIXTH_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
-					}
-					break;
-				}
-			}break;}
-		case FIRE7:{
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[SENVENTH_FIRE]){
-						outfireRobotState.fireArray[SENVENTH_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
-					}
-					else if(!outfireRobotState.fireArray[SENVENTH_FIRE]){
-						outfireRobotState.fireArray[SENVENTH_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
-					}
-					break;
-				}
-			}break;}
-		case FIRE8:{
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[EIGHTH_FIRE]){
-						outfireRobotState.fireArray[EIGHTH_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
-					}
-					else if(!outfireRobotState.fireArray[EIGHTH_FIRE]){
-						outfireRobotState.fireArray[EIGHTH_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
-					}
-					break;
-				}
-			}break;}
-		case FIRE9:{
-			switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					if(outfireRobotState.fireArray[NINTH_FIRE]){
-						outfireRobotState.fireArray[NINTH_FIRE] = 0;
-						OLED_ShowString(0,0,"CHOOSE_NO",16);
-					}
-					else if(!outfireRobotState.fireArray[NINTH_FIRE]){
-						outfireRobotState.fireArray[NINTH_FIRE] = 1;
-						OLED_ShowString(0,0,"CHOOSE_YES",16);
-					}
-					break;
-				}
-			}break;}
-				case CLEAR_ALL:{
-				switch(oled.keyValue){
-				case OLED_BACK:{
-					currentMenu -> displayFlag = UPDATEMENU_FLAG;				//Ë¢ÐÂÒ»´Î²Ëµ¥~
-					break;
-				}
-				case OLED_ENTER:{
-					OLED_Clear();
-					for(i = 0;i < 9;i++){outfireRobotState.returnFlag[i] = 0;} //³õÊ¼»¯»ðµãÑ°ÕÒºÍ·µ»Øº¯Êý
-					for(i = 0;i < 9;i++){outfireRobotState.fireArray[i] = 0;}
-					OLED_ShowString(0,0,"CLEAR_ALL",16);
-					OLED_ShowString(0,2,"SUCCESSFULY",16);
-					break;
-				}
-			}break;}
+			}
+		}	
 	}
-
 }
-
-
-
 
 
 /*
