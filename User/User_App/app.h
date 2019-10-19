@@ -92,6 +92,7 @@ typedef struct{
 	uint8_t returnFlag[10];
 	uint16_t ADCDataLeft;
 	uint16_t ADCDataRight;
+	uint32_t caliTimeCalc;
 }outfireRobotState_t;
 /*************救援机器人结构体****************/
 typedef struct{

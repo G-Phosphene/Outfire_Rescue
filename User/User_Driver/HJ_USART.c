@@ -1,5 +1,5 @@
 #include "HJ_USART.h"
-
+#include "app.h"
 void wifi_Init(void){
 GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
@@ -97,7 +97,8 @@ void wifiControl(uint8_t command){
 			app_CAMERA_UPorDOWN(camera_DOWN,150);
 			break;
 		case 0x38 : /////用来控制自动回城
-			app_CAMERA_UPorDOWN(camera_DOWN,90);
+//			app_CAMERA_UPorDOWN(camera_DOWN,90);	
+		rescueRobotState.rescueTaskstep = DRIVER_INDEEP;
 		 break;
 		default:
 		break;

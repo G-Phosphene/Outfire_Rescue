@@ -49,6 +49,7 @@ void app_WorkCommandReset(void)    //恢复初始状态标志位
 	outfireRobotState.step = READY;
 	outfireRobotState.beginFlag = FREE;
 	outfireRobotState.workMode = TEST;
+	outfireRobotState.caliTimeCalc = 0;
 	driver_FanMotorOff();	
 }
 

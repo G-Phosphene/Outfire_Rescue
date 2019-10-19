@@ -65,7 +65,7 @@ void app_CAMERA_UPorDOWN(uint8_t mode,uint32_t rata){//相机1上2下
 	}
 }
 
-void app_goOtherAction(uint16_t goTime,turnDirection_e direction,handDirection_e hand){
+void app_goOtherAction(uint16_t goTime,turnDirection_e direction,handDirection_e hand){			//行走动作函数，前后左右，短延时
 	switch(hand){
 		case FRONT:{
 			switch(direction){
@@ -129,7 +129,7 @@ void app_goOtherAction(uint16_t goTime,turnDirection_e direction,handDirection_e
 	}
 }
 
-void app_turnAngleDirection(uint8_t leftWheelDirection,uint32_t leftWheelRate,
+void app_turnAngleDirection(uint8_t leftWheelDirection,uint32_t leftWheelRate,								//完成转向（使用绝对延时）关键函数
                             uint8_t rightWheelDirection,uint32_t rightWheelRate,
 														uint32_t WaitingTime){
 	TickType_t xLastWakeTime = xTaskGetTickCount();	
@@ -200,7 +200,7 @@ void app_goBack(uint16_t goTime,turnDirection_e direction){
 	}
 }
 
-void calibrationTostraight(){
+void calibrationTostraight(){																		//极偏时校准
 	uint32_t timeSumLeft;
 	uint32_t timeSumRight;
 	float differenceValueLeft;
@@ -229,7 +229,7 @@ void calibrationGostraight(turnDirection_e direction){
 	float differenceSum;
 	switch(direction){
 		case LEFT:{
-			if(SRF_04_Data3.getDistance <= 20 && SRF_04_Data4.getDistance <= 20){
+			if(SRF_04_Data3.getDistance <= 40 && SRF_04_Data4.getDistance <= 40){
 				differenceValue = fabs(SRF_04_Data3.getDistance - SRF_04_Data4.getDistance);
 				differenceSum = GO_STRAIGHT_RATIO*differenceValue;
 				if(SRF_04_Data3.getDistance > SRF_04_Data4.getDistance){
@@ -247,7 +247,7 @@ void calibrationGostraight(turnDirection_e direction){
 		break;
 		}
 		case RIGHT:{
-			if(SRF_04_Data5.getDistance <= 20 && SRF_04_Data6.getDistance <= 20){
+			if(SRF_04_Data5.getDistance <= 40 && SRF_04_Data6.getDistance <= 40){
 				differenceValue = fabs(SRF_04_Data5.getDistance - SRF_04_Data6.getDistance);
 				differenceSum = GO_STRAIGHT_RATIO*differenceValue;
 				if(SRF_04_Data5.getDistance > SRF_04_Data6.getDistance){
@@ -270,7 +270,7 @@ void calibrationGostraight(turnDirection_e direction){
 		} 
 	}
 }
-calibrationFinish_e app_findFire(void){
+calibrationFinish_e app_findFire(void){																						//寻火函数
 	float calibrationData;
 	calibrationFinish_e finshFlag;
 	finshFlag = CALIBRATION_NULL;
@@ -292,7 +292,7 @@ calibrationFinish_e app_findFire(void){
 }
 
 
-calibrationFinish_e app_calibration(turnDirection_e direction){      //对位函数
+calibrationFinish_e app_calibration(turnDirection_e direction){   				   //对位函数 		
 	float calibrationData;
 	calibrationFinish_e finshFlag;
 	finshFlag = CALIBRATION_NULL;
@@ -302,15 +302,21 @@ calibrationFinish_e app_calibration(turnDirection_e direction){      //对位函数
 		{
 			app_LeftWheel(BEHIND,2);
 			app_RightWheel(FRONT,2);
+			outfireRobotState.caliTimeCalc++;
 			finshFlag = CALIBRATION_WAITING;
 		}else if(calibrationData < -CALIBRATION_DISTANCE){
 			app_LeftWheel(FRONT,2);
 			app_RightWheel(BEHIND,2);
+			outfireRobotState.caliTimeCalc++;
 			finshFlag = CALIBRATION_WAITING;
 		}
 		else if(calibrationData != 0){
 			TIM_SetCompare1(TIM3,parameter[NAME_SET_ZERO__LEFT_RATE]);
 			TIM_SetCompare2(TIM3,parameter[NAME_SET_ZERO__RIGHT_RATE]);
+			outfireRobotState.caliTimeCalc = 0;
+			finshFlag = CALIBRATION_FINISHED;
+		}
+		if(outfireRobotState.caliTimeCalc >= 2000){
 			finshFlag = CALIBRATION_FINISHED;
 		}
 	}else if(direction == RIGHT){
@@ -319,17 +325,23 @@ calibrationFinish_e app_calibration(turnDirection_e direction){      //对位函数
 			{
 				app_LeftWheel(FRONT,2);
 				app_RightWheel(BEHIND,2);
+				outfireRobotState.caliTimeCalc++;
 				finshFlag = CALIBRATION_WAITING;
 			}else if(calibrationData < -CALIBRATION_DISTANCE){
 				app_LeftWheel(BEHIND,2);
 				app_RightWheel(FRONT,2);
+				outfireRobotState.caliTimeCalc++;
 				finshFlag = CALIBRATION_WAITING;
 			}
 			else if(calibrationData != 0){
 				TIM_SetCompare1(TIM3,parameter[NAME_SET_ZERO__LEFT_RATE]);
 				TIM_SetCompare2(TIM3,parameter[NAME_SET_ZERO__RIGHT_RATE]);
+				outfireRobotState.caliTimeCalc = 0;
 				finshFlag = CALIBRATION_FINISHED;
 			}
+			if(outfireRobotState.caliTimeCalc >= 2000){
+				finshFlag = CALIBRATION_FINISHED;
+			}	
 	}else if(direction == NO_TURN){
 		calibrationData = SRF_04_Data1.getDistance - SRF_04_Data2.getDistance;
 		if(calibrationData >CALIBRATION_DISTANCE) 
@@ -353,7 +365,7 @@ calibrationFinish_e app_calibration(turnDirection_e direction){      //对位函数
 
 
 
-void app_frontTurn(turnDirection_e direction,uint16_t angle){
+void app_frontTurn(turnDirection_e direction,uint16_t angle){ 					
 //	moveWays_e finishFlag;
 	switch(direction){
 		case LEFT :{

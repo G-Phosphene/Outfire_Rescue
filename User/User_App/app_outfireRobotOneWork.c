@@ -5,39 +5,37 @@
 //  ³¬Éù²¨ÓëÇ½µÄ¾àÀë ¿ÉÒÔ×ö  Flash
 void app_outfireOneWorkReady(void)
 { 
-	/*´ý²¹³ä*/ //ÓÃ°´¼ü¿ØÖÆÐ¡³µÆô¶¯//
-	//finishFlag = SET_ZERO;
 	/***********³õÊ¼»¯»ðµãÎ»ÖÃ*********/
 	if(outfireRobotState.workMode == OUT_FIRE){
-			app_judgeFunc();	
-		if(outfireRobotState.returnFlag[RETURN] == 0){
-			outfireRobotState.robotTaskstep = FIRST_FIRE;
+			app_judgeFunc();	                                  	//	ÅÐ¶Ï»ðµãÎ»ÊýÒÔ¼°È·¶¨·µ³Ì»ðµã
+		if(outfireRobotState.returnFlag[RETURN] == 0){					//  Èç¹ûÓÐ»ðµã£¬Ôò·µ»Ø±êÖ¾Î»Îª0£¬¼´ÏòÇ°Ñ°ÕÒ»ðµã
+			outfireRobotState.robotTaskstep = FIRST_FIRE; 				//	µÚÒ»»ðµã
 			outfireRobotState.step = DOING;
 			outfireRobotState.workStep = NULL;
 			outfireRobotState.moveWays = STOP;
 			outfireRobotState.beginFlag = FREE;
-		}else if(outfireRobotState.returnFlag[RETURN] ==	1){
-			outfireRobotState.robotTaskstep = RETURN;
+		}else if(outfireRobotState.returnFlag[RETURN] ==	1){ 	//Èç¹ûÃ»»ðµã£¬Ôò·µ»Ø±êÖ¾Î»Îª1£¬¼´Ô­µØ²»¶¯
+			outfireRobotState.robotTaskstep = RETURN;							//Ô­µØ²»¶¯
 			outfireRobotState.step = DOING;
 			outfireRobotState.workStep = NULL;
 			outfireRobotState.moveWays = STOP;
-				outfireRobotState.beginFlag = FREE;
+			outfireRobotState.beginFlag = FREE;
 		}
 	}
 }
 /***************Ò»»ðµã»ù±¾Íê±¸***************/
 void app_findFirstFire(void){
-	if(outfireRobotState.fireArray[FIRST_FIRE] == 1){   //ÓÐ»ð
+	if(outfireRobotState.fireArray[FIRST_FIRE] == 1){   									//µÚÒ»»ðµãÓÐ»ð£¬ÔòÖ´ÐÐÒÔÏÂ¶¯×÷
 		switch(outfireRobotState.workStep){								
 			case 0:{
-				calibrationFinish = app_calibration(RIGHT);
+				calibrationFinish = app_calibration(RIGHT);											//Æð²½Ð£×¼
 				if(calibrationFinish == CALIBRATION_FINISHED){
 					outfireRobotState.workStep = 1;
 				}
 			break;
 			}
 			case 1:{
-				calibrationGostraight(RIGHT);
+				calibrationGostraight(RIGHT);																		//ÓÒ²àÇ°½øÐ£×¼º¯Êý
 				if(SRF_04_Data1.getDistance < 50 && SRF_04_Data2.getDistance <50)
 				{
 					
@@ -54,7 +52,7 @@ void app_findFirstFire(void){
 			break;
 			}
 			case 3:{
-				calibrationFinish = app_findFire();
+				calibrationFinish = app_findFire();															//Ñ°»ð
 				outfireRobotState.moveWays = OTHER;
 				if(SRF_04_Data1.getDistance + SRF_04_Data2.getDistance < DISTANCE_TO_FIRE + 4 && calibrationFinish == CALIBRATION_FINISHED){
 					outfireRobotState.workStep = 4; 
@@ -68,14 +66,14 @@ void app_findFirstFire(void){
 			} 
 			case 5:{
 				app_fan();						
-				calibrationFinish = checkFire();			//¿ª·çÉÈ
+				calibrationFinish = checkFire();																//¿ª·çÉÈ
 				if(calibrationFinish == CALIBRATION_FINISHED){
 					outfireRobotState.workStep = 6;
 				}
 			break;
 			}
 			case 6:{
-				app_goOtherAction(150,NO_TURN,BEHIND);
+				app_goOtherAction(150,NO_TURN,BEHIND);													//µ¹³µ
 				outfireRobotState.moveWays = REVERSE_LEFT_TURN_135;
 				outfireRobotState.workStep = 7;
 			break;
@@ -106,7 +104,7 @@ void app_findFirstFire(void){
 			}
 		}
 	}
-	else {																						//Ò»»ðµãÎÞ»ð
+	else {																																//Ò»»ðµãÎÞ»ð
 		switch(outfireRobotState.workStep){
 			case 0:{
 				calibrationFinish = app_calibration(RIGHT);
@@ -158,7 +156,7 @@ void app_findFirstFire(void){
 }
 
 /***************¾Å»ðµã»ù±¾ÍêÉÆ***************/
-void app_findNinthFire(void){  																			 //´ÓÒ»ºÅÅÐ¶ÏÓÐÎÞ»ðÑæÖ®ºó¾ÀÕý³µÌå×ËÌ¬£¬£¨²»¹ÜÓÐÃ»ÓÐ£©¶¼´ÓÒ»ºÅ»ðµãÎ»ÖÃ×÷Îª±¾º¯ÊýµÄÆðµã
+void app_findNinthFire(void){  																			 	//´ÓÒ»ºÅÅÐ¶ÏÓÐÎÞ»ðÑæÖ®ºó¾ÀÕý³µÌå×ËÌ¬£¬£¨²»¹ÜÓÐÃ»ÓÐ£©¶¼´ÓÒ»ºÅ»ðµãÎ»ÖÃ×÷Îª±¾º¯ÊýµÄÆðµã
 	if(outfireRobotState.fireArray[NINTH_FIRE] == 1){										//ÓÐ»ð
 		switch(outfireRobotState.workStep){
 			case 0:{
@@ -294,7 +292,7 @@ void app_findNinthFire(void){  																			 //´ÓÒ»ºÅÅÐ¶ÏÓÐÎÞ»ðÑæÖ®ºó¾ÀÕý³
 			}
 		}
 	}
-	else {
+	else {																																//ÎÞ»ð
 		switch(outfireRobotState.workStep){
 			case 0:{
 				outfireRobotState.workStep = 1;	
@@ -622,7 +620,7 @@ void app_findSecondFire(void){
 			}
 			case 2:{
 				app_fan();						
-				calibrationFinish = checkFire();			//¿ª·çÉÈ
+				calibrationFinish = checkFire();														//¿ª·çÉÈ
 				if(calibrationFinish == CALIBRATION_FINISHED){
 					outfireRobotState.workStep = 'a';
 				}
@@ -649,8 +647,8 @@ void app_findSecondFire(void){
 	}
 }
 
-//½Úµã·µ³Ìº¯Êý
-void app_returnFunc(void){
+
+void app_returnFunc(void){																				//½Úµã·µ³Ìº¯Êý
 	if(outfireRobotState.returnFlag[FIRST_FIRE] == 1){
 		switch(outfireRobotState.workStep){
 			case 0:{
@@ -940,14 +938,6 @@ void app_returnFunc(void){
 				outfireRobotState.workStep = 2;
 				break;
 			}
-//			case 1:{
-//				calibrationFinish = app_calibration(LEFT);
-//				outfireRobotState.moveWays = OTHER;
-//				if(calibrationFinish == CALIBRATION_FINISHED){
-//					outfireRobotState.workStep = 2;
-//				}
-//				break;
-//			}
 			case 2:{
 				calibrationGostraight(LEFT);
 				outfireRobotState.moveWays = OTHER;
@@ -958,15 +948,6 @@ void app_returnFunc(void){
 				}
 				break;
 			}
-//			case 3:{
-//				outfireRobotState.moveWays = GO_STRAIGHT;
-//				if(SRF_04_Data1.getDistance < 22 && SRF_04_Data2.getDistance < 32){
-//					outfireRobotState.moveWays = FRONT_TURN_RIGHT_90;
-//					vTaskDelay(200);
-//					outfireRobotState.workStep = 'g';
-//				}
-//				break;
-//			}
 			case 'g':{
 				calibrationFinish = app_calibration(LEFT);
 				outfireRobotState.moveWays = OTHER;
@@ -1013,4 +994,3 @@ void app_outfireOneWorkDoing(void){
 		}
 	}
 }
-
